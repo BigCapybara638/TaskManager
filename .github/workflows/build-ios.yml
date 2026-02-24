@@ -36,18 +36,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # ВАЖНО: Устанавливаем переменные для Xcode
-      - name: Set Xcode environment variables
+      # Сборка Kotlin Multiplatform фреймворка
+      - name: Build Kotlin Framework
         run: |
-          echo "DEVELOPER_DIR=$(xcode-select -p)" >> $GITHUB_ENV
+          # Устанавливаем переменные для Xcode
           echo "SDKROOT=$(xcrun --sdk iphoneos --show-sdk-path)" >> $GITHUB_ENV
           echo "PLATFORM_NAME=iphoneos" >> $GITHUB_ENV
-          echo "CURRENT_ARCH=arm64" >> $GITHUB_ENV
-
-      # Альтернативный способ сборки iOS framework
-      - name: Build iOS Framework
-        run: |
-          # Собираем для конкретной архитектуры
+          
+          # Собираем для arm64 (физические устройства)
           ./gradlew :composeApp:linkDebugFrameworkIosArm64 \
             -Pkotlin.native.cocoapods.generate.wrapper=true \
             --stacktrace
@@ -55,31 +51,44 @@ jobs:
       - name: Prepare Xcode project
         run: |
           cd iosApp
-          # Если есть Podfile
+          
+          # Проверяем наличие Podfile
           if [ -f "Podfile" ]; then
+            echo "Installing CocoaPods dependencies..."
             pod install
           fi
+          
+          # Листинг доступных схем
+          echo "Available schemes:"
+          xcodebuild -list -project iosApp.xcodeproj
 
+      # ВАЖНО: Исправленная команда с правильным синтаксисом
       - name: Build iOS App
         run: |
           cd iosApp
           
           # Определяем какой проект использовать
           if [ -f "iosApp.xcworkspace" ]; then
-            WORKSPACE="iosApp.xcworkspace"
+            # Используем workspace если есть
+            xcodebuild -workspace iosApp.xcworkspace \
+                       -scheme iosApp \
+                       -configuration Debug \
+                       -sdk iphoneos \
+                       -arch arm64 \
+                       CODE_SIGNING_ALLOWED=NO \
+                       SKIP_INSTALL=NO \
+                       build
           else
-            WORKSPACE="iosApp.xcodeproj"
+            # Используем project с правильным синтаксисом
+            xcodebuild -project iosApp.xcodeproj \
+                       -scheme iosApp \
+                       -configuration Debug \
+                       -sdk iphoneos \
+                       -arch arm64 \
+                       CODE_SIGNING_ALLOWED=NO \
+                       SKIP_INSTALL=NO \
+                       build
           fi
-          
-          # Сборка для физического устройства
-          xcodebuild -$WORKSPACE \
-                     -scheme iosApp \
-                     -configuration Debug \
-                     -sdk iphoneos \
-                     -arch arm64 \
-                     CODE_SIGNING_ALLOWED=NO \
-                     SKIP_INSTALL=NO \
-                     build
 
       - name: Create IPA
         run: |
@@ -88,19 +97,19 @@ jobs:
           # Создаем Payload директорию
           mkdir -p Payload
           
-          # Копируем .app (путь может отличаться)
-          APP_PATH=$(find build -name "*.app" -type d | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            # Пробуем другой возможный путь
-            APP_PATH=$(find . -name "*.app" -type d -not -path "*/Payload/*" | head -n 1)
-          fi
+          # Ищем .app bundle
+          APP_PATH=$(find . -name "*.app" -type d -not -path "*/Payload/*" | head -n 1)
           
           if [ ! -z "$APP_PATH" ]; then
+            echo "Found app at: $APP_PATH"
             cp -r "$APP_PATH" Payload/
             zip -r app.ipa Payload
             echo "✅ IPA created successfully"
           else
             echo "❌ Could not find .app bundle"
+            # Поиск всех .app для отладки
+            echo "Searching for .app bundles..."
+            find . -name "*.app" -type d
             exit 1
           fi
 
