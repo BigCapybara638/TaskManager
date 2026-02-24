@@ -5,11 +5,11 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # Ручной запуск
+  workflow_dispatch:
 
 jobs:
   build-ios:
-    runs-on: macos-latest  # GitHub предоставляет macOS среду
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -36,31 +36,73 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # ВАЖНО: Устанавливаем переменные для Xcode
+      - name: Set Xcode environment variables
+        run: |
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> $GITHUB_ENV
+          echo "SDKROOT=$(xcrun --sdk iphoneos --show-sdk-path)" >> $GITHUB_ENV
+          echo "PLATFORM_NAME=iphoneos" >> $GITHUB_ENV
+          echo "CURRENT_ARCH=arm64" >> $GITHUB_ENV
+
+      # Альтернативный способ сборки iOS framework
       - name: Build iOS Framework
         run: |
-          ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+          # Собираем для конкретной архитектуры
+          ./gradlew :composeApp:linkDebugFrameworkIosArm64 \
+            -Pkotlin.native.cocoapods.generate.wrapper=true \
+            --stacktrace
 
       - name: Prepare Xcode project
         run: |
           cd iosApp
-          pod install  # если используете CocoaPods
+          # Если есть Podfile
+          if [ -f "Podfile" ]; then
+            pod install
+          fi
 
       - name: Build iOS App
         run: |
           cd iosApp
-          xcodebuild -workspace iosApp.xcworkspace \
+          
+          # Определяем какой проект использовать
+          if [ -f "iosApp.xcworkspace" ]; then
+            WORKSPACE="iosApp.xcworkspace"
+          else
+            WORKSPACE="iosApp.xcodeproj"
+          fi
+          
+          # Сборка для физического устройства
+          xcodebuild -$WORKSPACE \
                      -scheme iosApp \
                      -configuration Debug \
                      -sdk iphoneos \
+                     -arch arm64 \
                      CODE_SIGNING_ALLOWED=NO \
+                     SKIP_INSTALL=NO \
                      build
 
-      - name: Create IPA (для установки на iPhone)
+      - name: Create IPA
         run: |
           cd iosApp
+          
+          # Создаем Payload директорию
           mkdir -p Payload
-          cp -r build/Build/Products/Debug-iphoneos/iosApp.app Payload/
-          zip -r app.ipa Payload
+          
+          # Копируем .app (путь может отличаться)
+          APP_PATH=$(find build -name "*.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            # Пробуем другой возможный путь
+            APP_PATH=$(find . -name "*.app" -type d -not -path "*/Payload/*" | head -n 1)
+          fi
+          
+          if [ ! -z "$APP_PATH" ]; then
+            cp -r "$APP_PATH" Payload/
+            zip -r app.ipa Payload
+            echo "✅ IPA created successfully"
+          else
+            echo "❌ Could not find .app bundle"
+            exit 1
+          fi
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
