@@ -36,14 +36,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Сборка Kotlin Multiplatform фреймворка
       - name: Build Kotlin Framework
         run: |
           # Устанавливаем переменные для Xcode
           echo "SDKROOT=$(xcrun --sdk iphoneos --show-sdk-path)" >> $GITHUB_ENV
           echo "PLATFORM_NAME=iphoneos" >> $GITHUB_ENV
           
-          # Собираем для arm64 (физические устройства)
+          # Собираем для arm64
           ./gradlew :composeApp:linkDebugFrameworkIosArm64 \
             -Pkotlin.native.cocoapods.generate.wrapper=true \
             --stacktrace
@@ -52,64 +51,91 @@ jobs:
         run: |
           cd iosApp
           
-          # Проверяем наличие Podfile
+          # Устанавливаем CocoaPods если есть
           if [ -f "Podfile" ]; then
-            echo "Installing CocoaPods dependencies..."
             pod install
           fi
           
-          # Листинг доступных схем
+          # Показываем доступные схемы
           echo "Available schemes:"
           xcodebuild -list -project iosApp.xcodeproj
 
-      # ВАЖНО: Исправленная команда с правильным синтаксисом
-      - name: Build iOS App
+      - name: Build iOS App with explicit output path
         run: |
           cd iosApp
           
-          # Определяем какой проект использовать
+          # Создаем директорию для бинарников
+          mkdir -p build/Debug-iphoneos
+          
+          # Устанавливаем DERIVED_DATA_PATH для контроля вывода
+          DERIVED_DATA_PATH="$PWD/build/DerivedData"
+          
+          # Сборка с явным указанием DerivedData
           if [ -f "iosApp.xcworkspace" ]; then
-            # Используем workspace если есть
             xcodebuild -workspace iosApp.xcworkspace \
                        -scheme iosApp \
                        -configuration Debug \
                        -sdk iphoneos \
                        -arch arm64 \
+                       -derivedDataPath "$DERIVED_DATA_PATH" \
                        CODE_SIGNING_ALLOWED=NO \
                        SKIP_INSTALL=NO \
                        build
           else
-            # Используем project с правильным синтаксисом
             xcodebuild -project iosApp.xcodeproj \
                        -scheme iosApp \
                        -configuration Debug \
                        -sdk iphoneos \
                        -arch arm64 \
+                       -derivedDataPath "$DERIVED_DATA_PATH" \
                        CODE_SIGNING_ALLOWED=NO \
                        SKIP_INSTALL=NO \
                        build
           fi
+          
+          # Копируем .app в известное место
+          echo "Looking for .app in DerivedData..."
+          find "$DERIVED_DATA_PATH" -name "*.app" -type d
+          
+          # Копируем .app если найден
+          APP_PATH=$(find "$DERIVED_DATA_PATH" -name "*.app" -type d | head -n 1)
+          if [ ! -z "$APP_PATH" ]; then
+            echo "Found .app at: $APP_PATH"
+            cp -r "$APP_PATH" build/Debug-iphoneos/
+          else
+            echo "❌ .app not found in DerivedData"
+          fi
 
-      - name: Create IPA
+      - name: Alternative - Find .app everywhere
         run: |
           cd iosApp
           
-          # Создаем Payload директорию
-          mkdir -p Payload
+          echo "🔍 Searching for .app bundles in entire project..."
+          find "$PWD" -name "*.app" -type d
           
-          # Ищем .app bundle
-          APP_PATH=$(find . -name "*.app" -type d -not -path "*/Payload/*" | head -n 1)
+          # Поиск в стандартных местах Xcode
+          echo "🔍 Searching in Xcode default locations..."
+          find ~/Library/Developer/Xcode/DerivedData -name "*.app" -type d 2>/dev/null || true
+          
+          # Поиск в build директории
+          echo "🔍 Searching in build directory..."
+          find build -name "*.app" -type d 2>/dev/null || true
+
+      - name: Create IPA from found app
+        run: |
+          cd iosApp
+          
+          # Ищем .app во всех возможных местах
+          APP_PATH=$(find "$PWD" -name "*.app" -type d | head -n 1)
           
           if [ ! -z "$APP_PATH" ]; then
-            echo "Found app at: $APP_PATH"
+            echo "✅ Found app at: $APP_PATH"
+            mkdir -p Payload
             cp -r "$APP_PATH" Payload/
             zip -r app.ipa Payload
             echo "✅ IPA created successfully"
           else
             echo "❌ Could not find .app bundle"
-            # Поиск всех .app для отладки
-            echo "Searching for .app bundles..."
-            find . -name "*.app" -type d
             exit 1
           fi
 
@@ -119,3 +145,4 @@ jobs:
           name: ios-app
           path: iosApp/app.ipa
           retention-days: 7
+          if-no-files-found: warn
