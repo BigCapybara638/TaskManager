@@ -42,7 +42,7 @@ fun App() {
                 userScrollEnabled = true,
             ) {
 
-                val itemList = listOf("one", "first", "second", "first", "second")
+                val itemList = listOf("one", "first", "second", "first", "second", "one", "first", "second", "first", "second", "one", "first", "second", "first", "second")
 
                 items(itemList) { item ->
                     TaskItem(item)
