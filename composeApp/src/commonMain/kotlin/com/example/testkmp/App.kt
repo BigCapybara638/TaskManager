@@ -26,8 +26,7 @@ import testkmp.composeapp.generated.resources.Res
 import testkmp.composeapp.generated.resources.compose_multiplatform
 
 @Composable
-@Preview
-fun App() {
+fun App(modifier: Modifier) {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
@@ -38,7 +37,7 @@ fun App() {
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(300.dp),
-                modifier = Modifier,
+                modifier = modifier,
                 userScrollEnabled = true,
             ) {
 

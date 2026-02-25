@@ -1,5 +1,6 @@
 package com.example.testkmp
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
@@ -8,6 +9,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "TestKMP",
     ) {
-        App()
+        App(Modifier)
     }
 }
