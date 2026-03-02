@@ -1,6 +1,7 @@
 package com.example.testkmp
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,52 +39,47 @@ fun App(modifier: Modifier) {
             modules(appModule)
         }
     ) {
-
-        MaterialTheme {
+        TaskManagerTheme {
 
             var showContent by remember { mutableStateOf(false) }
             val viewModel: HomeViewModel = koinViewModel()
 
-            Column(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(300.dp),
+                modifier = modifier.padding(horizontal = 6.dp),
+                userScrollEnabled = true,
             ) {
 
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(300.dp),
-                    modifier = modifier,
-                    userScrollEnabled = true,
-                ) {
+                val itemList = viewModel.loadCatsData()
 
-                    val itemList = viewModel.loadCatsData()
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = "Категории",
+                            fontSize = 24.sp,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-
-                        ) {
-                            Text(
-                                text = "Категории",
-                                fontSize = 24.sp,
-                                modifier = Modifier
-                                    .padding(top = 18.dp, bottom = 6.dp)
-                            )
-                            Spacer(modifier = Modifier
-                                .fillMaxWidth(0.85F)
-                                .height(2.dp)
-                                .background(Color.Gray)
-                            )
-                        }
-
+                                .padding(top = 18.dp, bottom = 6.dp)
+                        )
+                        Spacer(modifier = Modifier
+                            .fillMaxWidth(0.85F)
+                            .height(2.dp)
+                            .background(Color.Gray)
+                        )
                     }
-                    items(itemList) { item ->
-                        CategoriesItem(item)
-                    }
+
+                }
+                items(itemList) { item ->
+                    CategoriesItem(
+                        item,
+                        {
+
+                    })
                 }
             }
         }

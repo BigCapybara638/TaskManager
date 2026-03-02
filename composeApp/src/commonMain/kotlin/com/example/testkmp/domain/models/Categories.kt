@@ -1,7 +1,7 @@
 package com.example.testkmp.domain.models
 
 data class Categories(
-    val id: Long,
+    val id: String,
     val name: String,
     val description: String
 )
