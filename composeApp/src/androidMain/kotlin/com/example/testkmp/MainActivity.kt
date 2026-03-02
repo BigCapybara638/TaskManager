@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(Modifier.padding(start = 30.dp))
+            App(Modifier.padding(top = 30.dp))
         }
     }
 }
@@ -27,5 +27,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App(Modifier.padding(start = 30.dp))
+    App(Modifier.padding(top = 30.dp))
 }
