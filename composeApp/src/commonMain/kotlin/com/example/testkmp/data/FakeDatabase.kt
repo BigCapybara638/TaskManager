@@ -1,5 +1,6 @@
 package com.example.testkmp.data
 
+import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 
 class FakeDatabase {
@@ -25,4 +26,12 @@ class FakeDatabase {
         Task("dddd", ""),
         Task("dddd", ""),
         )
+
+    val categories = listOf(
+        Categories(0, "Домашние дела", "Описание"),
+        Categories(0, "В колледже", "Описание"),
+        Categories(0, "На тренировке", "Описание"),
+        Categories(0, "На работе", "Описание"),
+        Categories(0, "Другое", "Описание")
+    )
 }
