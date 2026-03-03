@@ -10,4 +10,6 @@ interface DatabaseRepository {
 
     fun getCategoriesList() : List<Categories>
 
+    fun getTasksInCategory(category: Categories) : List<Task>
+
 }

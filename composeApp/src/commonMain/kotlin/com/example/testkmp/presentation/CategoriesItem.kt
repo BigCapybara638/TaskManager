@@ -38,16 +38,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CategoriesItem(
     cats: Categories,
     onClick: () -> Unit)
 {
+    val viewModel: HomeViewModel = koinViewModel()
 
     var state by remember { mutableStateOf(false) }
 
@@ -58,7 +61,6 @@ fun CategoriesItem(
             .clip(RoundedCornerShape(15.dp))
             .clickable{
                 state = !state
-                onClick
             }
             .background(Color.White)
             .padding(10.dp)
@@ -82,12 +84,9 @@ fun CategoriesItem(
                 animationSpec = tween(200)
             )
         ) {
-            TaskItem(Task("", "", "", ""))
-//            TasksListContent(
-//                tasks = tasks,
-//                viewModel = viewModel,
-//                categoryId = category.id
-//            )
+            TasksListContent(
+                tasks = viewModel.loadTasksInCategory(cats),
+            )
         }
     }
 }
@@ -95,8 +94,6 @@ fun CategoriesItem(
 @Composable
 fun TasksListContent(
     tasks: List<Task>,
-    viewModel: HomeViewModel,
-    categoryId: String
 ) {
     var showAddTaskDialog by remember { mutableStateOf(false) }
 
@@ -113,18 +110,16 @@ fun TasksListContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Список задач
-//        if (tasks.isEmpty()) {
-//            EmptyTasksPlaceholder()
-//        } else {
-//            tasks.forEach { task ->
-//                TaskItem(
-//                    task = task,
-//                    onToggle = { viewModel.toggleTaskCompletion(task) },
-//                    onDelete = { viewModel.deleteTask(task.id) }
-//                )
-//                Spacer(modifier = Modifier.height(8.dp))
-//            }
-//        }
+        if (tasks.isEmpty()) {
+            EmptyTasksPlaceholder()
+        } else {
+            tasks.forEach { task ->
+                TaskItem(
+                    task = task,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
     }
 
     // Диалог добавления задачи

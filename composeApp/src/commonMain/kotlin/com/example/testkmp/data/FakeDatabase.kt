@@ -39,10 +39,10 @@ class FakeDatabase {
     )
 
     val listTaskInCat = listOf(
-        Task("ddytyfdd", "", "", ""),
-        Task("dddds", "", "", ""),
-        Task("dddd", "", "", ""),
-        Task("dddd", "", "", ""),
-        Task("dddd", "", "", ""),
+        Task("ddytyfdd", "ddytyfdd", "", ""),
+        Task("dddds", "dddds", "", ""),
+        Task("dddd", "dddd", "", ""),
+        Task("dddd", "влылвыллвы", "", ""),
+        Task("dddd", "dddd", "", ""),
     )
 }

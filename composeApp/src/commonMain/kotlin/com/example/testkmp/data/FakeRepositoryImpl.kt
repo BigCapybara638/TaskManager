@@ -15,4 +15,8 @@ class FakeRepositoryImpl : DatabaseRepository {
     override fun getCategoriesList(): List<Categories> {
         return db.categories
     }
+
+    override fun getTasksInCategory(category: Categories): List<Task> {
+        return db.listTaskInCat
+    }
 }
