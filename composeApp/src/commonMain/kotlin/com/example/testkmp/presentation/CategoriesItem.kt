@@ -100,14 +100,13 @@ fun TasksListContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         // Кнопка добавления задачи
 //        AddTaskButton(
 //            onClick = { showAddTaskDialog = true }
 //        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         // Список задач
         if (tasks.isEmpty()) {
@@ -117,7 +116,7 @@ fun TasksListContent(
                 TaskItem(
                     task = task,
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
             }
         }
     }

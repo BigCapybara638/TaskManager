@@ -34,10 +34,11 @@ fun TaskItem(task: Task) {
             .clip(RoundedCornerShape(15.dp))
             .clickable{ checkedState = !checkedState }
             .background(Color.White)
-            .padding(10.dp)
+            .padding(6.dp)
     ) {
 
         Checkbox(
+            enabled = false,
             checked = checkedState,
             modifier = Modifier
                 .size(40.dp),
