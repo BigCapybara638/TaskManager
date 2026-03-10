@@ -5,6 +5,8 @@ import com.example.testkmp.domain.models.Task
 
 interface DatabaseRepository {
 
+    suspend fun addCategory(category: Categories)
+
     //suspend
     fun getTasksList() : List<Task>
 

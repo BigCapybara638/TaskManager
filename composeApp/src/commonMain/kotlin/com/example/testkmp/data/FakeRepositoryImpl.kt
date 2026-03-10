@@ -24,7 +24,7 @@ class FakeRepositoryImpl : DatabaseRepository {
         return db.listTaskInCat
     }
 
-    suspend fun addCategory(category: Categories) {
+    override suspend fun addCategory(category: Categories) {
         withContext(Dispatchers.IO) {
             supabase.from("categories").insert(category)
         }
