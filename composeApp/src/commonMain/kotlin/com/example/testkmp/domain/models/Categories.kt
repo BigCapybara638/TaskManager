@@ -9,5 +9,5 @@ data class Categories(
     @SerialName("created_at")
     val createdAt: String? = null,
     val name: String,
-    val description: String
+    val description: String? = null
 )

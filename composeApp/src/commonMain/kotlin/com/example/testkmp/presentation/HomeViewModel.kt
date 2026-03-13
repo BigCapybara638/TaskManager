@@ -32,11 +32,12 @@ class HomeViewModel(
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
             addCategoryUseCase(category)
+            loadCatsData()
         }
     }
 
     fun loadCatsData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _dataState.value = DataState.Loading
             try {
                 val result = DataState.Success(getAllCategoriesUseCase.invoke())
