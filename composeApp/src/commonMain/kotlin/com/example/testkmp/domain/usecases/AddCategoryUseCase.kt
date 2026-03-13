@@ -1,15 +1,16 @@
 package com.example.testkmp.domain.usecases
 
 import com.example.testkmp.domain.models.Categories
-import com.example.testkmp.domain.models.Task
 import com.example.testkmp.domain.repositories.DatabaseRepository
 
-class GetAllCategoriesUseCase(
+class AddCategoryUseCase(
     private val repository: DatabaseRepository
 ) {
 
-    suspend operator fun invoke() : List<Categories> {
-        return repository.getCategoriesList()
+    suspend operator fun invoke(
+        category: Categories
+    ) {
+        return repository.addCategory(category)
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.testkmp.di
 
 import com.example.testkmp.data.FakeRepositoryImpl
 import com.example.testkmp.domain.repositories.DatabaseRepository
+import com.example.testkmp.domain.usecases.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
@@ -17,6 +18,8 @@ val sharedModule = module {
     factory { GetAllCategoriesUseCase(get()) }
 
     factory { GetTasksInCategoryUseCase(get()) }
+
+    factory { AddCategoryUseCase(get()) }
 
     single<DatabaseRepository> { FakeRepositoryImpl() }
 }
