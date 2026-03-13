@@ -16,8 +16,13 @@ class FakeRepositoryImpl : DatabaseRepository {
         return db.list
     }
 
-    override fun getCategoriesList(): List<Categories> {
-        return db.categories
+    override suspend fun getCategoriesList(): List<Categories> {
+        return withContext(Dispatchers.IO) {
+            supabase
+                .from("categories")
+                .select()
+                .decodeList<Categories>()
+        }
     }
 
     override fun getTasksInCategory(category: Categories): List<Task> {

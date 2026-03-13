@@ -8,7 +8,7 @@ class GetAllCategoriesUseCase(
     private val repository: DatabaseRepository
 ) {
 
-    operator fun invoke() : List<Categories> {
+    suspend operator fun invoke() : List<Categories> {
         return repository.getCategoriesList()
     }
 

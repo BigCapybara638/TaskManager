@@ -10,7 +10,7 @@ interface DatabaseRepository {
     //suspend
     fun getTasksList() : List<Task>
 
-    fun getCategoriesList() : List<Categories>
+    suspend fun getCategoriesList() : List<Categories>
 
     fun getTasksInCategory(category: Categories) : List<Task>
 
