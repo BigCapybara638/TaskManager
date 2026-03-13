@@ -28,14 +28,9 @@ class FakeDatabase {
         )
 
     val categories = listOf(
-        Categories("0", "Домашние дела", "Описание"),
-        Categories("0", "В колледже", "Описание"),
-        Categories("0", "На тренировке", "Описание"),
-        Categories("0", "На работе", "Описание"),
-        Categories("0", "Другое", "Описание"),
-        Categories("0", "Другое", "Описание"),
-        Categories("0", "Другое", "Описание"),
-        Categories("0", "Другое", "Описание"),
+        Categories(0, name = "Домашние дела", description =  "Описание"),
+        Categories(1, name ="В колледже", description ="Описание"),
+        Categories(0, name ="На тренировке", description = "Описание"),
     )
 
     val listTaskInCat = listOf(

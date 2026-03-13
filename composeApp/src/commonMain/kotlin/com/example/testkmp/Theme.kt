@@ -17,7 +17,8 @@ val Pink80 = Color(0xFF5FE816)
 
 val Pink90 = Color(0xFF164AE8)
 
-val BackgroundColor = Color(0xFFEFE9CD)
+val BackgroundColor = Color(0xFFFDF6D2)
+val ActionButtonColor = Color(0xFFF6E06C)
 
 private val myColorScheme = lightColorScheme(
     primary = Purple80,

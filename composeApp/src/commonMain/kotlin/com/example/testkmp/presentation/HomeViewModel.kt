@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
+import com.example.testkmp.domain.usecases.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
@@ -16,6 +17,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class HomeViewModel(
+    private val addCategoryUseCase: AddCategoryUseCase,
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getTasksInCategoryUseCase: GetTasksInCategoryUseCase,
@@ -24,6 +26,12 @@ class HomeViewModel(
 
     var _dataState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
     val dataState: StateFlow<DataState<List<Task>>> = _dataState
+
+    fun addCategory(category: Categories)  {
+        viewModelScope.launch {
+            addCategoryUseCase(category)
+        }
+    }
 
     fun loadData() : List<Task> {
         return getAllTasksUseCase()
