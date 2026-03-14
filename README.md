@@ -1,13 +1,12 @@
 <div align="center">
-  <img src="https://github.com/your-username/your-repo/raw/main/compose-multiplatform.svg" alt="Kotlin Multiplatform Logo" width="80" height="80">
-  <h1>📋 KMM Task Manager</h1>
+  <h1>📋 KMP Task Manager</h1>
   <p>
     <strong>Мультиплатформенный менеджер задач, построенный на Kotlin Multiplatform и Compose Multiplatform.</strong>
   </p>
   <p>
     <img src="https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Desktop-brightgreen" alt="Platform: iOS, Android, Desktop">
-    <img src="https://img.shields.io/badge/Kotlin-2.0.0-purple?logo=kotlin" alt="Kotlin Version">
-    <img src="https://img.shields.io/badge/Compose%20Multiplatform-1.6.0-blue" alt="Compose Version">
+    <img src="https://img.shields.io/badge/Kotlin-2.3.0-purple?logo=kotlin" alt="Kotlin Version">
+    <img src="https://img.shields.io/badge/Compose%20Multiplatform-1.10.0-blue" alt="Compose Version">
   </p>
   <br>
   <img src="https://github.com/your-username/your-repo/raw/main/screenshots/preview.png" alt="App Preview" width="800">
@@ -17,17 +16,16 @@
 
 **Task Manager** — это демонстрационное приложение, показывающее возможности современной Kotlin Multiplatform разработки. Оно работает на **iOS**, **Android** и **Desktop (macOS/Windows/Linux)** с использованием единой кодовой базы.
 
-Приложение позволяет управлять списком задач с поддержкой темной темы и плавной анимацией.
+Приложение позволяет управлять списком задач, сортируя их по категориям, а также имеет синхронизацию между устройствами одного аккаунта
 
 ## 🛠 Технологический стек
 
 *   **Язык:** [Kotlin](https://kotlinlang.org/) Multiplatform
 *   **UI:** [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/) от JetBrains
-*   **Архитектура:** Clean Architecture + MVI
-*   **DI:** [Koin](https://insert-koin.io/) (или Kodein-DI)
-*   **База данных:** [SQLDelight](https://github.com/cashapp/sqldelight) от Square
+*   **Архитектура:** Clean Architecture + MVVM
+*   **DI:** [Koin](https://insert-koin.io/)
+*   **База данных:** [PostgreSQL](https://www.postgresql.org/) на [Supabase](https://supabase.com/)
 *   **Асинхронность:** [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
-*   **Навигация:** [Decompose](https://github.com/arkivanov/Decompose) (или Voyager)
 
 ## 🚀 Функциональность
 
@@ -35,7 +33,7 @@
 -   [x] ✅ Отметка о выполнении
 -   [x] 🌗 Автоматическая смена темы (светлая/темная) в зависимости от системы
 -   [x] 📱 Адаптивный интерфейс для всех платформ
--   [x] 💾 Локальное хранение данных
+-   [x] 💾 Хранение данных на сервере и автоматическое обновление данных на клиентах
 
 ## 📸 Скриншоты
 
@@ -57,7 +55,7 @@
 ## 🏁 Запуск проекта
 
 ### Предварительные требования
--   Android Studio Koala (или IntelliJ IDEA)
+-   Android Studio (или IntelliJ IDEA)
 -   Xcode (для запуска на iOS)
 -   JDK 17+
 
@@ -65,16 +63,16 @@
 
 1.  **Клонируйте репозиторий:**
     ```bash
-    git clone https://github.com/your-username/kmm-task-manager.git
+    git clone https://github.com/BigCapybara638/TaskManager.git
     ```
 2.  **Откройте проект** в Android Studio.
 3.  **Для Android:** Выберите конфигурацию `androidApp` и нажмите Run.
-4.  **Для Desktop:** Выберите конфигурацию `composeApp` (или `desktopApp`) и нажмите Run.
+4.  **Для Desktop:** Выберите конфигурацию `composeApp [jvm]` и нажмите Run.
 5.  **Для iOS:** Откройте папку `iosApp/iosApp.xcodeproj` в Xcode и соберите проект (или используйте плагин KMM в Android Studio).
 
 ## 🤝 Как внести вклад
 
-Вклады приветствуются! Если у вас есть идеи или вы нашли баг, создайте [Issue](https://github.com/your-username/your-repo/issues) или отправьте Pull Request.
+Вклады приветствуются! Если у вас есть идеи или вы нашли баг, создайте [Issue](https://github.com/BigCapybara638/TaskManager/issues) или отправьте Pull Request.
 
 1. Форкните проект
 2. Создайте ветку для фичи (`git checkout -b feature/amazing-feature`)
@@ -82,15 +80,11 @@
 4. Запушьте в ветку (`git push origin feature/amazing-feature`)
 5. Откройте Pull Request
 
-## 📄 Лицензия
-
-Распространяется под лицензией MIT. Смотрите [LICENSE](LICENSE) для получения дополнительной информации.
-
 ## 📬 Контакты
 
-Ваше Имя - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
+Павлов Семён - sp2007pavlov@yandex.ru
 
-Ссылка на проект: [https://github.com/your-username/your-repo](https://github.com/your-username/your-repo)
+Ссылка на проект: [https://github.com/BigCapybara638/TaskManager](https://github.com/BigCapybara638/TaskManager)
 
 ---
 
