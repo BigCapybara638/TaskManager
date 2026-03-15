@@ -4,10 +4,14 @@ import io.github.jan.supabase.auth.user.UserInfo
 
 interface AuthRepository {
 
-    suspend fun signUp() : UserInfo?
+    suspend fun signUp(
+        email: String,
+        password: String,
+        username: String? = null
+    ) : Result<UserInfo?>
 
-    suspend fun signIn() : UserInfo?
+    suspend fun signIn() : Result<UserInfo?>
 
-    suspend fun signOut() : UserInfo?
+    suspend fun signOut() : Result<UserInfo?>
 
 }
