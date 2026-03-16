@@ -81,11 +81,10 @@ fun SignUpScreen() {
                 onClick = {
                     if(login.isNotBlank() && pass.isNotBlank()) {
                         viewModel.signUp(email, pass, login)
-                        println("fffffffffffffffffffffff")
                     }
                 }
             ) {
-                Text("Войти")
+                Text("Зарегистрироваться")
             }
 
             Text(

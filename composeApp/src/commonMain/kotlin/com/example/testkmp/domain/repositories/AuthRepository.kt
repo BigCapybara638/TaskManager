@@ -1,6 +1,7 @@
 package com.example.testkmp.domain.repositories
 
 import io.github.jan.supabase.auth.user.UserInfo
+import com.example.testkmp.domain.models.Result
 
 interface AuthRepository {
 
