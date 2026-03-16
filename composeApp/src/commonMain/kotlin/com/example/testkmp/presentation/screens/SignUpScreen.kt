@@ -76,7 +76,6 @@ fun SignUpScreen() {
 
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.3F)
                     .padding(top = 10.dp),
                 onClick = {
                     if(login.isNotBlank() && pass.isNotBlank()) {

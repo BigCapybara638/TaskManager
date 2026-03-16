@@ -7,6 +7,7 @@ import io.github.jan.supabase.auth.user.UserInfo
 import com.example.testkmp.domain.models.Result
 import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
+import kotlinx.coroutines.delay
 
 class SupabaseAuthRepositoryImpl() : AuthRepository {
 
@@ -50,8 +51,32 @@ class SupabaseAuthRepositoryImpl() : AuthRepository {
         }
     }
 
-    override suspend fun signIn(): Result<UserInfo> {
-        TODO("Not yet implemented")
+    override suspend fun signIn(
+        email: String,
+        password: String
+    ): Result<UserInfo?> {
+        return try {
+
+            auth.signInWith(Email) {
+                this.email = email
+                this.password = password
+            }
+
+            val session = auth.currentSessionOrNull()
+                ?: throw Exception("No session after sign up")
+            println(session)
+
+            val userInfo = UserInfo(
+                id = session.user!!.id,
+                email = session.user!!.email,
+                aud = session.user!!.aud
+            )
+
+            Result.Success(userInfo)
+        } catch (e: Exception) {
+            println(e.message.toString())
+            Result.Error(e.message.toString())
+        }
     }
 
     override suspend fun signOut(): Result<UserInfo> {

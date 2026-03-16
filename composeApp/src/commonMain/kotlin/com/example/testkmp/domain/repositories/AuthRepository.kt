@@ -11,7 +11,10 @@ interface AuthRepository {
         username: String? = null
     ) : Result<UserInfo?>
 
-    suspend fun signIn() : Result<UserInfo?>
+    suspend fun signIn(
+        email: String,
+        password: String,
+    ) : Result<UserInfo?>
 
     suspend fun signOut() : Result<UserInfo?>
 
