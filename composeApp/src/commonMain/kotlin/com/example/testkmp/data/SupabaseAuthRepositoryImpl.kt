@@ -19,7 +19,6 @@ class SupabaseAuthRepositoryImpl() : AuthRepository {
                 this.email = email
                 this.password = password
             }
-            println("fffffffffffffffffffffff")
             Result.success(signUpResult)
         } catch (e: Exception) {
             println(e)

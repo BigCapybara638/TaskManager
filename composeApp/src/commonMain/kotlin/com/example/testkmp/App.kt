@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.example.testkmp.di.appModule
 import com.example.testkmp.presentation.screens.AuthScreen
 import com.example.testkmp.presentation.screens.HomeScreen
+import com.example.testkmp.presentation.screens.SignUpScreen
 import org.koin.compose.KoinApplication
 
 @Composable
@@ -14,7 +15,8 @@ fun App(modifier: Modifier) {
             modules(appModule)
         }
     ) {
-        AuthScreen()
+        SignUpScreen()
+        //AuthScreen()
         //HomeScreen(modifier)
     }
 }
