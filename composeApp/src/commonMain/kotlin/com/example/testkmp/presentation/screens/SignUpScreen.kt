@@ -1,5 +1,6 @@
 package com.example.testkmp.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,13 +22,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.presentation.AuthViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Preview(showBackground = true)
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    onNavigateToSignIn: () -> Unit
+) {
     TaskManagerTheme {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -94,7 +98,10 @@ fun SignUpScreen() {
 
             Text(
                 text = "Войти",
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                modifier = Modifier.clickable{
+                    onNavigateToSignIn()
+                }
             )
 
         }

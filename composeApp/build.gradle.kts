@@ -59,6 +59,9 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.core)
+
+            // Navigation
+            implementation(libs.androidx.navigation.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
