@@ -59,6 +59,9 @@ fun App(modifier: Modifier) {
                 //val home: Home = backStackEntry.toRoute()
                 HomeScreen(
                     modifier = modifier,
+                    onNavigateToSignIn = {
+                        navController.navigate(SignIn)
+                    }
                 )
             }
             composable<SignIn> {

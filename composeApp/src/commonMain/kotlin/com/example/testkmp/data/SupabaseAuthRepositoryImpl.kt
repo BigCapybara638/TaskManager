@@ -79,7 +79,12 @@ class SupabaseAuthRepositoryImpl() : AuthRepository {
         }
     }
 
-    override suspend fun signOut(): Result<UserInfo> {
-        TODO("Not yet implemented")
+    override suspend fun signOut(): Boolean {
+        try {
+            supabase.auth.signOut()
+            return true
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }

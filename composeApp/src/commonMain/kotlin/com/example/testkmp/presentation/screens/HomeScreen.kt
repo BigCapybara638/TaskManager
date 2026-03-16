@@ -1,6 +1,7 @@
 package com.example.testkmp.presentation.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,10 @@ import com.example.testkmp.presentation.components.CategoriesItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(
+    modifier: Modifier,
+    onNavigateToSignIn: () -> Unit,
+    ) {
     TaskManagerTheme {
 
         val viewModel: HomeViewModel = koinViewModel()
@@ -142,6 +146,15 @@ fun HomeScreen(modifier: Modifier) {
                                         .fillMaxWidth(0.85F)
                                         .height(2.dp)
                                         .background(Color.Gray)
+                                )
+
+                                Text(
+                                    text = "Выйти",
+                                    fontSize = 24.sp,
+                                    modifier = Modifier
+                                        .clickable{
+                                            onNavigateToSignIn()
+                                        }
                                 )
                             }
 
