@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
-import com.example.testkmp.presentation.TaskItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

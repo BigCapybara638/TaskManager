@@ -1,4 +1,4 @@
-package com.example.testkmp.presentation
+package com.example.testkmp.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

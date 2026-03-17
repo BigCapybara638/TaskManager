@@ -56,10 +56,12 @@ kotlin {
             implementation(libs.supabase.auth)
             implementation(libs.supabase.realtime)
             implementation(libs.supabase.storage)
-//            implementation(libs.supabase.functions)
 
             // Ktor
             implementation(libs.ktor.client.core)
+
+            // Navigation
+            implementation(libs.androidx.navigation.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
