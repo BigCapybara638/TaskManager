@@ -34,12 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
 import com.example.testkmp.TaskManagerTheme
+import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.AddCategoryDialog
 import com.example.testkmp.presentation.components.CategoriesItem
+import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,7 +60,7 @@ fun HomeScreen(
         var showAddCategoryDialog by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
-            viewModel.loadCatsData()
+            viewModel.loadCatsData(supabase.auth.currentSessionOrNull()!!.user!!.id)
         }
 
         Scaffold(
@@ -180,7 +182,7 @@ fun HomeScreen(
             AddCategoryDialog(
                 onDismiss = { showAddCategoryDialog = false },
                 onConfirm = { title, description ->
-                    viewModel.addCategory(Categories(name = title, description = description!!))
+                    viewModel.addCategory(Categories(name = title, description = description!!, userId = supabase.auth.currentSessionOrNull()!!.user!!.id))
                     showAddCategoryDialog = false
                 }
             )

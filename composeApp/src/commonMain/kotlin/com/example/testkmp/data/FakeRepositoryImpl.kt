@@ -16,11 +16,15 @@ class FakeRepositoryImpl : DatabaseRepository {
         return db.list
     }
 
-    override suspend fun getCategoriesList(): List<Categories> {
+    override suspend fun getCategoriesList(userId: String): List<Categories> {
         return withContext(Dispatchers.IO) {
             supabase
                 .from("categories")
-                .select()
+                .select {
+                    filter {
+                        Categories::userId eq userId
+                    }
+                }
                 .decodeList<Categories>()
         }
     }

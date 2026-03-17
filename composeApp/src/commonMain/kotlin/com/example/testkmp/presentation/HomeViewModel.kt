@@ -2,12 +2,14 @@ package com.example.testkmp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.domain.usecases.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
+import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,18 +28,20 @@ class HomeViewModel(
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
             addCategoryUseCase(category)
-            loadCatsData()
+            loadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
         }
     }
 
-    fun loadCatsData() {
+    fun loadCatsData(userId: String?) {
+
         viewModelScope.launch {
             _dataState.value = DataState.Loading
             try {
-                val result = DataState.Success(getAllCategoriesUseCase.invoke())
+                val result = DataState.Success(getAllCategoriesUseCase.invoke(userId!!))
                 _dataState.value = result
             } catch (e: Exception) {
                 _dataState.value = DataState.Error(e)
+                println(e.message.toString())
             }
         }
     }
