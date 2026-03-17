@@ -10,6 +10,7 @@ import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
+import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.HomeViewModel
@@ -31,6 +32,8 @@ val sharedModule = module {
     factory { SignUpUseCase(get()) }
 
     factory { SignInUseCase(get()) }
+
+    factory { SignOutUseCase(get()) }
 
     single<DatabaseRepository> { FakeRepositoryImpl() }
 

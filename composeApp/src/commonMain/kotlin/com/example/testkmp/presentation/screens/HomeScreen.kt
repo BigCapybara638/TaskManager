@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.domain.models.Categories
+import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.AddCategoryDialog
@@ -49,6 +50,8 @@ fun HomeScreen(
     TaskManagerTheme {
 
         val viewModel: HomeViewModel = koinViewModel()
+        val authViewModel: AuthViewModel = koinViewModel()
+
 
         // collectAsState - не привязан к жц, collectAsStateWithLifecycle - привязан, актулально только для Android
         val dataState by viewModel.dataState.collectAsState()
@@ -153,6 +156,7 @@ fun HomeScreen(
                                     fontSize = 24.sp,
                                     modifier = Modifier
                                         .clickable{
+                                            authViewModel.signOut()
                                             onNavigateToSignIn()
                                         }
                                 )

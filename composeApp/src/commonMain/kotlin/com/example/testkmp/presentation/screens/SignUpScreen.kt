@@ -90,19 +90,15 @@ fun SignUpScreen(
                 Text("Зарегистрироваться")
             }
 
-            Text(
-                text = "Уже есть аккаунт?",
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-
-            Text(
-                text = "Войти",
-                fontSize = 12.sp,
-                modifier = Modifier.clickable{
+            Button(
+                onClick = {
                     onNavigateToSignIn()
                 }
-            )
+            ) {
+                Text(
+                    text = "Войти",
+                )
+            }
 
         }
     }

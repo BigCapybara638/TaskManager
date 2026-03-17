@@ -87,28 +87,22 @@ fun SignInScreen(
                 Text("Войти")
             }
 
-            Text(
-                text = "Нет аккаунта?",
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-
-            Text(
-                text = "Зарегиcтрироваться",
-                fontSize = 12.sp,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .clickable{
-                        onNavigateToSignUp()
+            Button(
+                onClick = {
+                    onNavigateToSignUp()
                 }
-            )
+            ) {
+                Text(
+                    text = "Зарегиcтрироваться",
+                )
+            }
 
             when (authState) {
                 is Result.Error -> {
-                    Text("Error")
+
                 }
                 is Result.Loading -> {
-                    Text("Load")
+
                 }
                 is Result.Success -> {
                     onNavigateToHome()

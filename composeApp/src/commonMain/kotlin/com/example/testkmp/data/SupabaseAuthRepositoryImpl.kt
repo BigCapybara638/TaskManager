@@ -81,9 +81,11 @@ class SupabaseAuthRepositoryImpl() : AuthRepository {
 
     override suspend fun signOut(): Boolean {
         try {
-            supabase.auth.signOut()
+            val res = supabase.auth.signOut()
+            println(res)
             return true
         } catch (e: Exception) {
+            println(e)
             throw e
         }
     }

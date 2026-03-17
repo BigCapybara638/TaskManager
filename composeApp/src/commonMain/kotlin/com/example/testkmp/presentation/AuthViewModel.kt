@@ -6,13 +6,15 @@ import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import kotlinx.coroutines.launch
 import com.example.testkmp.domain.models.Result
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
+import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AuthViewModel(
     private val signUpUseCase: SignUpUseCase,
-    private val signInUseCase: SignInUseCase
+    private val signInUseCase: SignInUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
     private var _authState = MutableStateFlow<Result<UserInfo?>>(Result.Loading)
@@ -43,4 +45,14 @@ class AuthViewModel(
         }
     }
 
+    fun signOut() {
+        viewModelScope.launch {
+            try {
+                signOutUseCase()
+                _authState.value = Result.Loading
+            } catch (e: Exception) {
+                _authState.value = Result.Error(e.message.toString())
+            }
+        }
+    }
 }
