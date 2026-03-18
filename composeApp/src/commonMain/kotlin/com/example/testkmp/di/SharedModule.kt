@@ -9,6 +9,7 @@ import com.example.testkmp.domain.usecases.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
+import com.example.testkmp.domain.usecases.auth.CheckAuthorizationState
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
 import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
@@ -28,6 +29,8 @@ val sharedModule = module {
     factory { GetTasksInCategoryUseCase(get()) }
 
     factory { AddCategoryUseCase(get()) }
+
+    factory { CheckAuthorizationState(get()) }
 
     factory { SignUpUseCase(get()) }
 

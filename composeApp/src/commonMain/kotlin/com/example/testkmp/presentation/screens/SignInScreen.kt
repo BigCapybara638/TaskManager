@@ -29,6 +29,7 @@ import com.example.testkmp.SignUp
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.domain.models.Result
 import com.example.testkmp.presentation.AuthViewModel
+import io.github.jan.supabase.auth.status.SessionStatus
 import org.koin.compose.viewmodel.koinViewModel
 
 @Preview(showBackground = true)
@@ -41,6 +42,8 @@ fun SignInScreen(
 
         val viewModel: AuthViewModel = koinViewModel()
         val authState by viewModel.authState.collectAsState()
+        val startAuthState by viewModel.startAuthState.collectAsState()
+
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,6 +76,22 @@ fun SignInScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(0.85F)
             )
+
+            when(startAuthState) {
+                is SessionStatus.RefreshFailure -> {
+                    Text("Ошибка входа - $startAuthState")
+                }
+                is SessionStatus.Initializing -> {
+                    Text("Соединение...")
+                }
+
+                is SessionStatus.Authenticated -> {
+                    Text("Успех")
+                }
+                is SessionStatus.NotAuthenticated -> {
+                    Text("Нет аутентификации...")
+                }
+            }
 
             Button(
                 modifier = Modifier

@@ -1,6 +1,7 @@
 package com.example.testkmp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -43,7 +44,11 @@ fun App(modifier: Modifier) {
         val authViewModel: AuthViewModel = koinViewModel()
         val navController = rememberNavController()
 
-        val sessionStatus by supabase.auth.sessionStatus.collectAsState()
+        val sessionStatus by authViewModel.startAuthState.collectAsState()
+
+        LaunchedEffect(Unit) {
+            authViewModel.checkAuthState()
+        }
 
         val startDestination = when (sessionStatus) {
             is SessionStatus.Authenticated -> Home
@@ -76,6 +81,9 @@ fun App(modifier: Modifier) {
             }
             composable<SignUp> {
                 SignUpScreen(
+                    onNavigateToHome = {
+                        navController.navigate(Home)
+                    },
                     onNavigateToSignIn = {
                         navController.navigate(SignIn)
                     }

@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import kotlinx.coroutines.launch
 import com.example.testkmp.domain.models.Result
+import com.example.testkmp.domain.usecases.auth.CheckAuthorizationState
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
 import com.example.testkmp.domain.usecases.auth.SignOutUseCase
+import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AuthViewModel(
+    private val checkAuthorizationState: CheckAuthorizationState,
     private val signUpUseCase: SignUpUseCase,
     private val signInUseCase: SignInUseCase,
     private val signOutUseCase: SignOutUseCase
@@ -19,6 +22,20 @@ class AuthViewModel(
 
     private var _authState = MutableStateFlow<Result<UserInfo?>>(Result.Loading)
     val authState: StateFlow<Result<UserInfo?>> = _authState
+
+    private var _startAuthState = MutableStateFlow<SessionStatus>(SessionStatus.Initializing)
+    val startAuthState: StateFlow<SessionStatus> = _startAuthState
+
+    fun checkAuthState() {
+        viewModelScope.launch {
+            try {
+                val result = checkAuthorizationState()
+                _startAuthState.value = result
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
+    }
 
     fun signUp(email: String, pass: String, username: String? = null) {
         viewModelScope.launch {
