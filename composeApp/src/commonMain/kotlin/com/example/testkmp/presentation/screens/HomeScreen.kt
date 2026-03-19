@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -29,11 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
+import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
@@ -42,6 +45,7 @@ import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.AddCategoryDialog
 import com.example.testkmp.presentation.components.CategoriesItem
+import com.example.testkmp.presentation.components.GigachatIsland
 import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -97,7 +101,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.85F)
                                 .height(2.dp)
-                                .background(Color.Gray)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(PrimaryTextColor)
                         )
                         Box(
                             contentAlignment = Alignment.Center,
@@ -131,7 +136,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.85F)
                                 .height(2.dp)
-                                .background(Color.Gray)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(PrimaryTextColor)
                         )
 
                         CircularProgressIndicator(
@@ -169,8 +175,11 @@ fun HomeScreen(
                                     modifier = Modifier
                                         .fillMaxWidth(0.85F)
                                         .height(2.dp)
-                                        .background(Color.Gray)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(PrimaryTextColor)
                                 )
+
+                                GigachatIsland()
 
                                 Text(
                                     text = "Выйти",

@@ -11,14 +11,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 
-val Purple80 = Color(0xFFEEB509)
+//val Purple80 = Color(0xFFEEB509)
+val Purple80 = Color(0xFFC96E4A)
+
 val PurpleGrey80 = Color(0xFFE3EC03)
 val Pink80 = Color(0xFF5FE816)
 
 val Pink90 = Color(0xFF164AE8)
 
-val BackgroundColor = Color(0xFFFDF6D2)
-val ActionButtonColor = Color(0xFFF6E06C)
+//val BackgroundColor = Color(0xFFFDF6D2)
+val BackgroundColor = Color(0xFFEAF0F3)
+
+//val ActionButtonColor = Color(0xFFF6E06C)
+val ActionButtonColor = Color(0xFFC96E4A)
+
+val PrimaryTextColor = Color(0xFF1A2B3C)
+val IslandColor = Color(0xFFF1F8FF)
+val SecondaryTextColor = Color(0xFF4F84BA)
+
+
 
 private val myColorScheme = lightColorScheme(
     primary = Purple80,

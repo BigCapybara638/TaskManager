@@ -30,6 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.testkmp.PrimaryTextColor
+import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
@@ -56,6 +58,7 @@ fun CategoriesItem(
             .padding(10.dp)
     ) {
         Text(text = cats.name,
+            color = PrimaryTextColor,
             fontSize = 24.sp,
             modifier = Modifier
                 .padding(start = 10.dp)
@@ -75,7 +78,9 @@ fun CategoriesItem(
             )
         ) {
             TasksListContent(
-                tasks = viewModel.loadTasksInCategory(cats),
+                tasks =
+                    viewModel.loadTasksInCategory(cats)
+
             )
         }
     }
