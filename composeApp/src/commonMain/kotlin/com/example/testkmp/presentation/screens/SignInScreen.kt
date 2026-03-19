@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +30,7 @@ import com.example.testkmp.SignUp
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.domain.models.Result
 import com.example.testkmp.presentation.AuthViewModel
+import io.github.jan.supabase.auth.status.SessionStatus
 import org.koin.compose.viewmodel.koinViewModel
 
 @Preview(showBackground = true)
@@ -41,6 +43,8 @@ fun SignInScreen(
 
         val viewModel: AuthViewModel = koinViewModel()
         val authState by viewModel.authState.collectAsState()
+        val startAuthState by viewModel.startAuthState.collectAsState()
+
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,6 +77,27 @@ fun SignInScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(0.85F)
             )
+
+            when(startAuthState) {
+                is SessionStatus.RefreshFailure -> {
+                    Text(
+                        text = "Ошибка входа - $startAuthState",
+                        color = Color.Red)
+                }
+                is SessionStatus.Initializing -> {
+
+                }
+
+                is SessionStatus.Authenticated -> {
+                    Text("Успешно!")
+                }
+                is SessionStatus.NotAuthenticated -> {
+                    Text(
+                        text = "Ошибка: Неправильный логин или пароль",
+                        color = Color.Red
+                    )
+                }
+            }
 
             Button(
                 modifier = Modifier

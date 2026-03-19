@@ -1,5 +1,6 @@
 package com.example.testkmp.data
 
+import androidx.compose.runtime.collectAsState
 import com.example.testkmp.domain.repositories.AuthRepository
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -7,11 +8,18 @@ import io.github.jan.supabase.auth.user.UserInfo
 import com.example.testkmp.domain.models.Result
 import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
 class SupabaseAuthRepositoryImpl() : AuthRepository {
 
     private val auth = supabase.auth
+
+
+    override suspend fun checkAuthorizationState(): SessionStatus {
+        return auth.sessionStatus.value
+    }
 
     override suspend fun signUp(
         email: String,

@@ -3,6 +3,7 @@ package com.example.testkmp.presentation.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -81,16 +82,34 @@ fun HomeScreen(
                 is DataState.Error -> {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 14.dp)
 
                     ) {
                         Text(
-                            text = "Не удалось загрузить",
-                            textAlign = TextAlign.Center
+                            text = "Категории",
+                            fontSize = 24.sp,
+                            modifier = Modifier
+                                .padding(top = 18.dp, bottom = 6.dp)
                         )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth(0.85F)
+                                .height(2.dp)
+                                .background(Color.Gray)
+                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Text(
+                                text = "Не удалось загрузить",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
                     }
                 }
 

@@ -30,7 +30,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreen(
-    onNavigateToSignIn: () -> Unit
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
     TaskManagerTheme {
         Column(
@@ -84,6 +85,7 @@ fun SignUpScreen(
                 onClick = {
                     if(login.isNotBlank() && pass.isNotBlank()) {
                         viewModel.signUp(email, pass, login)
+                        onNavigateToHome()
                     }
                 }
             ) {
