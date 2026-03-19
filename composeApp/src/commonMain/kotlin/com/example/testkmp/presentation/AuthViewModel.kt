@@ -46,7 +46,7 @@ class AuthViewModel(
                 is Result.Error -> {println(result.error)}
                 is Result.Loading -> {println("loading")}
             }
-
+            checkAuthState()
         }
     }
 
@@ -59,6 +59,7 @@ class AuthViewModel(
             } catch (e: Exception) {
                 _authState.value = Result.Error(e.message.toString())
             }
+            checkAuthState()
         }
     }
 

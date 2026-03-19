@@ -100,7 +100,9 @@ fun HomeScreen(
                                 .background(Color.Gray)
                         )
                         Box(
-                            modifier = Modifier.fillMaxSize()
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
                         ) {
                             Text(
                                 text = "Не удалось загрузить",
