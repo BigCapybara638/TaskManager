@@ -8,7 +8,7 @@ class GetTasksInCategoryUseCase(
     private val repository: DatabaseRepository
 ) {
 
-    operator fun invoke(category: Categories) : List<Task> {
+    suspend operator fun invoke(category: Categories) : List<Task> {
         return repository.getTasksInCategory(category)
     }
 

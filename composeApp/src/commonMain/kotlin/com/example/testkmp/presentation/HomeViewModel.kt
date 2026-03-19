@@ -10,6 +10,7 @@ import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
 import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -47,7 +48,11 @@ class HomeViewModel(
     }
 
     fun loadTasksInCategory(category: Categories) : List<Task> {
-        return getTasksInCategoryUseCase(category)
+        var result = listOf<Task>()
+        viewModelScope.launch {
+            result = getTasksInCategoryUseCase(category)
+        }
+        return result
     }
 
 

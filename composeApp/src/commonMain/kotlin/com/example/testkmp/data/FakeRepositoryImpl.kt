@@ -10,10 +10,11 @@ import kotlinx.coroutines.withContext
 
 class FakeRepositoryImpl : DatabaseRepository {
 
-    val db = FakeDatabase()
+    //val db = FakeDatabase()
 
     override fun getTasksList(): List<Task> {
-        return db.list
+        return emptyList()
+        //return db.list
     }
 
     override suspend fun getCategoriesList(userId: String): List<Categories> {
@@ -29,8 +30,17 @@ class FakeRepositoryImpl : DatabaseRepository {
         }
     }
 
-    override fun getTasksInCategory(category: Categories): List<Task> {
-        return db.listTaskInCat
+    override suspend fun getTasksInCategory(category: Categories): List<Task> {
+        return withContext(Dispatchers.IO) {
+            supabase
+                .from("tasks")
+                .select {
+                    filter {
+                        Task::category_id eq category.id
+                    }
+                }
+                .decodeList<Task>()
+        }
     }
 
     override suspend fun addCategory(category: Categories) {
