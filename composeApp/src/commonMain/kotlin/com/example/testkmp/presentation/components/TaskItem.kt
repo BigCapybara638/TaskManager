@@ -38,7 +38,6 @@ fun TaskItem(task: Task) {
     ) {
 
         Checkbox(
-            enabled = false,
             checked = checkedState,
             modifier = Modifier
                 .size(40.dp),

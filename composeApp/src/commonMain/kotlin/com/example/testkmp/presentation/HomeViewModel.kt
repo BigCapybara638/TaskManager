@@ -26,6 +26,10 @@ class HomeViewModel(
     var _dataState = MutableStateFlow<DataState<List<Categories>>>(DataState.Loading)
     val dataState: StateFlow<DataState<List<Categories>>> = _dataState
 
+    var _tasksState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
+    val tasksState: StateFlow<DataState<List<Task>>> = _tasksState
+
+
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
             addCategoryUseCase(category)
@@ -34,7 +38,7 @@ class HomeViewModel(
     }
 
     fun loadCatsData(userId: String?) {
-
+        loadTasksData(userId)
         viewModelScope.launch {
             _dataState.value = DataState.Loading
             try {
@@ -42,6 +46,20 @@ class HomeViewModel(
                 _dataState.value = result
             } catch (e: Exception) {
                 _dataState.value = DataState.Error(e)
+                println(e.message.toString())
+            }
+        }
+    }
+
+    fun loadTasksData(userId: String?) {
+
+        viewModelScope.launch {
+            _tasksState.value = DataState.Loading
+            try {
+                val result = DataState.Success(getAllTasksUseCase.invoke(userId!!))
+                _tasksState.value = result
+            } catch (e: Exception) {
+                _tasksState.value = DataState.Error(e)
                 println(e.message.toString())
             }
         }

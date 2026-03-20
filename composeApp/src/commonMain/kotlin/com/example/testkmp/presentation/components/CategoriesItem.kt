@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,9 +41,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CategoriesItem(
     cats: Categories,
-    onClick: () -> Unit)
-{
-    val viewModel: HomeViewModel = koinViewModel()
+    tasksList: List<Task>,
+    onClick: () -> Unit
+) {
 
     var state by remember { mutableStateOf(false) }
 
@@ -78,9 +79,7 @@ fun CategoriesItem(
             )
         ) {
             TasksListContent(
-                tasks =
-                    viewModel.loadTasksInCategory(cats)
-
+                tasks = tasksList
             )
         }
     }
@@ -93,13 +92,19 @@ fun TasksListContent(
     var showAddTaskDialog by remember { mutableStateOf(false) }
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
     ) {
         // Кнопка добавления задачи
-//        AddTaskButton(
-//            onClick = { showAddTaskDialog = true }
-//        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.8F),
+
+            onClick = { showAddTaskDialog = true }
+        ) {
+            Text("Добавить задачу")
+        }
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -117,15 +122,15 @@ fun TasksListContent(
     }
 
     // Диалог добавления задачи
-//    if (showAddTaskDialog) {
-//        AddTaskDialog(
-//            onDismiss = { showAddTaskDialog = false },
-//            onConfirm = { title, description ->
-//                //viewModel.addTask(categoryId, title, description)
-//                showAddTaskDialog = false
-//            }
-//        )
-//    }
+    if (showAddTaskDialog) {
+        AddTaskDialog(
+            onDismiss = { showAddTaskDialog = false },
+            onConfirm = { title, description ->
+                //viewModel.addTask(categoryId, title, description)
+                showAddTaskDialog = false
+            }
+        )
+    }
 }
 
 
@@ -143,51 +148,4 @@ fun EmptyTasksPlaceholder() {
             fontSize = 14.sp
         )
     }
-}
-
-@Composable
-fun AddTaskDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (String, String?) -> Unit
-) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Новая задача") },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text("Название") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    label = { Text("Описание (необязательно)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirm(title, description.ifBlank { null }) },
-                enabled = title.isNotBlank()
-            ) {
-                Text("Добавить")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Отмена")
-            }
-        }
-    )
 }

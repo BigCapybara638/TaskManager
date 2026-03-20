@@ -12,9 +12,17 @@ class FakeRepositoryImpl : DatabaseRepository {
 
     //val db = FakeDatabase()
 
-    override fun getTasksList(): List<Task> {
-        return emptyList()
-        //return db.list
+    override suspend fun getTasksList(userId: String): List<Task> {
+        return withContext(Dispatchers.IO) {
+            supabase
+                .from("tasks")
+                .select {
+                    filter {
+                        Task::user_id eq userId
+                    }
+                }
+                .decodeList<Task>()
+        }
     }
 
     override suspend fun getCategoriesList(userId: String): List<Categories> {
@@ -35,9 +43,9 @@ class FakeRepositoryImpl : DatabaseRepository {
             supabase
                 .from("tasks")
                 .select {
-                    filter {
-                        Task::category_id eq category.id
-                    }
+//                    filter {
+//                        Task::category_id eq category.id
+//                    }
                 }
                 .decodeList<Task>()
         }

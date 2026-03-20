@@ -26,6 +26,10 @@ class AuthViewModel(
     private var _startAuthState = MutableStateFlow<SessionStatus>(SessionStatus.Initializing)
     val startAuthState: StateFlow<SessionStatus> = _startAuthState
 
+    init {
+        checkAuthState()
+    }
+
     fun checkAuthState() {
         viewModelScope.launch {
             try {

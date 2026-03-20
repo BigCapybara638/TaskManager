@@ -7,8 +7,10 @@ class GetAllTasksUseCase(
     private val repository: DatabaseRepository
 ) {
 
-    operator fun invoke() : List<Task> {
-        return repository.getTasksList()
+    suspend operator fun invoke(
+        userId: String
+    ) : List<Task> {
+        return repository.getTasksList(userId)
     }
 
 }

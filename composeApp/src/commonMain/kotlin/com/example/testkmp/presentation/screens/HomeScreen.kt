@@ -40,6 +40,7 @@ import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
+import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
@@ -62,6 +63,7 @@ fun HomeScreen(
 
         // collectAsState - не привязан к жц, collectAsStateWithLifecycle - привязан, актулально только для Android
         val dataState by viewModel.dataState.collectAsState()
+        val tasksState by viewModel.tasksState.collectAsState()
         var showAddCategoryDialog by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
@@ -196,6 +198,17 @@ fun HomeScreen(
                         items(state.data) { item ->
                             CategoriesItem(
                                 item,
+                                when(tasksState) {
+                                    is DataState.Error -> {
+                                        emptyList()
+                                    }
+                                    is DataState.Loading -> {
+                                        emptyList()
+                                    }
+                                    is DataState.Success -> {
+                                        (tasksState as DataState.Success<List<Task>>).data.filter { it.category_id == item.id }
+                                    }
+                                },
                                 {
 
                                 }
