@@ -40,6 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CategoriesItem(
+    userId: String,
     cats: Categories,
     tasksList: List<Task>,
     onClick: () -> Unit
@@ -79,6 +80,8 @@ fun CategoriesItem(
             )
         ) {
             TasksListContent(
+                userId = userId,
+                categories = cats,
                 tasks = tasksList
             )
         }
@@ -87,9 +90,12 @@ fun CategoriesItem(
 
 @Composable
 fun TasksListContent(
+    userId: String,
+    categories: Categories,
     tasks: List<Task>,
 ) {
     var showAddTaskDialog by remember { mutableStateOf(false) }
+    val viewModel: HomeViewModel = koinViewModel()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,7 +132,7 @@ fun TasksListContent(
         AddTaskDialog(
             onDismiss = { showAddTaskDialog = false },
             onConfirm = { title, description ->
-                //viewModel.addTask(categoryId, title, description)
+                viewModel.addTask(Task(name = title, description = description, category_id = categories.id!!, user_id = userId))
                 showAddTaskDialog = false
             }
         )

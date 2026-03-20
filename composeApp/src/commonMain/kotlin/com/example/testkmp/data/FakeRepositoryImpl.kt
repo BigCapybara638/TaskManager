@@ -56,4 +56,10 @@ class FakeRepositoryImpl : DatabaseRepository {
             supabase.from("categories").insert(category)
         }
     }
+
+    override suspend fun addTask(task: Task) {
+        withContext(Dispatchers.IO) {
+            supabase.from("tasks").insert(task)
+        }
+    }
 }

@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
-import com.example.testkmp.domain.usecases.AddCategoryUseCase
+import com.example.testkmp.domain.usecases.add.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
+import com.example.testkmp.domain.usecases.add.AddTaskUseCase
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val addCategoryUseCase: AddCategoryUseCase,
+    private val addTaskUseCase: AddTaskUseCase,
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getTasksInCategoryUseCase: GetTasksInCategoryUseCase,
@@ -34,6 +36,13 @@ class HomeViewModel(
         viewModelScope.launch {
             addCategoryUseCase(category)
             loadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
+        }
+    }
+
+    fun addTask(task: Task)  {
+        viewModelScope.launch {
+            addTaskUseCase(task)
+            loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
         }
     }
 

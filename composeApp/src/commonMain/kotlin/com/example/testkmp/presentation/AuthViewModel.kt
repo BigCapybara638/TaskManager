@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import kotlinx.coroutines.launch
 import com.example.testkmp.domain.models.Result
-import com.example.testkmp.domain.usecases.auth.CheckAuthorizationState
+import com.example.testkmp.domain.usecases.auth.CheckAuthorizationStateUseCase
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
 import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import io.github.jan.supabase.auth.status.SessionStatus
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class AuthViewModel(
-    private val checkAuthorizationState: CheckAuthorizationState,
+    private val checkAuthorizationState: CheckAuthorizationStateUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val signInUseCase: SignInUseCase,
     private val signOutUseCase: SignOutUseCase

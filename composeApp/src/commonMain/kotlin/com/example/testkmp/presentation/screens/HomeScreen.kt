@@ -197,6 +197,7 @@ fun HomeScreen(
                         }
                         items(state.data) { item ->
                             CategoriesItem(
+                                supabase.auth.currentSessionOrNull()!!.user!!.id,
                                 item,
                                 when(tasksState) {
                                     is DataState.Error -> {
