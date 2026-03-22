@@ -12,5 +12,6 @@ data class Task(
     val description: String? = null,
     @SerialName("category_id")
     val category_id: Long,
-    val user_id: String
+    val user_id: String,
+    var completed: Boolean = false
 )

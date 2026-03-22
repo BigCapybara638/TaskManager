@@ -15,4 +15,5 @@ interface DatabaseRepository {
 
     suspend fun getTasksInCategory(category: Categories) : List<Task>
 
+    suspend fun updateIsCompleteState(task: Task)
 }

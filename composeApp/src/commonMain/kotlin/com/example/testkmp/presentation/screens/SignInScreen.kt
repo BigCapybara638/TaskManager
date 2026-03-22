@@ -45,6 +45,9 @@ fun SignInScreen(
         val authState by viewModel.authState.collectAsState()
         val startAuthState by viewModel.startAuthState.collectAsState()
 
+        LaunchedEffect(Unit) {
+            viewModel.checkAuthState()
+        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

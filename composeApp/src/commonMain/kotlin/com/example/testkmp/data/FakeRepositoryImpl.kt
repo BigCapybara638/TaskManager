@@ -4,6 +4,7 @@ import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.repositories.DatabaseRepository
 import com.example.testkmp.domain.models.Task
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -48,6 +49,28 @@ class FakeRepositoryImpl : DatabaseRepository {
 //                    }
                 }
                 .decodeList<Task>()
+        }
+    }
+
+    override suspend fun updateIsCompleteState(task: Task) {
+        withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
+                try {
+                    supabase
+                        .from("tasks")
+                        .update(
+                            {
+                                set("completed", !task.completed)
+                            }
+                        ) {
+                            filter {
+                                eq("id", task.id!!)
+                            }
+                        }
+                } catch (e: Exception) {
+                    throw e
+                }
+            }
         }
     }
 

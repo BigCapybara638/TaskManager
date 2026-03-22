@@ -9,6 +9,7 @@ import com.example.testkmp.domain.usecases.add.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
+import com.example.testkmp.domain.usecases.UpdateCompletedStateUseCase
 import com.example.testkmp.domain.usecases.add.AddTaskUseCase
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.async
@@ -22,7 +23,7 @@ class HomeViewModel(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getTasksInCategoryUseCase: GetTasksInCategoryUseCase,
-
+    private val updateCompletedStateUseCase: UpdateCompletedStateUseCase,
     ) : ViewModel() {
 
     var _dataState = MutableStateFlow<DataState<List<Categories>>>(DataState.Loading)
@@ -43,6 +44,16 @@ class HomeViewModel(
         viewModelScope.launch {
             addTaskUseCase(task)
             loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
+        }
+    }
+
+    fun updateIsCompletedState(task: Task) {
+        viewModelScope.launch {
+            try {
+                updateCompletedStateUseCase(task)
+            } catch (e: Exception) {
+                println(e)
+            }
         }
     }
 
