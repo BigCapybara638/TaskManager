@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
+import com.example.testkmp.EnabledActionButtonColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.data.supabase
@@ -60,26 +63,53 @@ fun HomeScreen(
         val viewModel: HomeViewModel = koinViewModel()
         val authViewModel: AuthViewModel = koinViewModel()
 
-
         // collectAsState - не привязан к жц, collectAsStateWithLifecycle - привязан, актулально только для Android
         val dataState by viewModel.dataState.collectAsState()
         val tasksState by viewModel.tasksState.collectAsState()
+        val floatingButtonState by viewModel.floatingButtonState.collectAsState()
         var showAddCategoryDialog by remember { mutableStateOf(false) }
 
+        val userId = supabase.auth.currentSessionOrNull()!!.user!!.id
+
         LaunchedEffect(Unit) {
-            viewModel.loadCatsData(supabase.auth.currentSessionOrNull()!!.user!!.id)
+            viewModel.loadCatsData(userId)
         }
 
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        showAddCategoryDialog = true
-                    },
-                    containerColor = ActionButtonColor,
+                Column(
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Text("+")
+                    Text(
+                        text = "↻",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(bottom = 6.dp)
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (floatingButtonState) ActionButtonColor else EnabledActionButtonColor)
+                            .clickable {
+                                if (floatingButtonState) {
+                                    viewModel.loadTasksData(userId)
+                                    viewModel.updateFloatingButtonStateFalse()
+                                }
+                            }
+                            .padding(bottom = 4.dp)
+                    )
+
+
+                    FloatingActionButton(
+                        onClick = {
+                            showAddCategoryDialog = true
+                        },
+                        containerColor = ActionButtonColor,
+                    ) {
+                        Text("+")
+                    }
                 }
+
             },
 
             floatingActionButtonPosition = FabPosition.End

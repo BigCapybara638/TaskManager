@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,12 +35,14 @@ import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun TaskItem(task: Task) {
+fun TaskItem(
+    task: Task,
+) {
     val viewModel: HomeViewModel = koinViewModel()
 
     var checkedState by remember { mutableStateOf(task.completed) }
 
-    var isPressed by remember { mutableStateOf(task.completed) }
+    var isPressed by rememberSaveable  { mutableStateOf(task.completed) }
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
         animationSpec = spring(
@@ -49,7 +52,7 @@ fun TaskItem(task: Task) {
         label = "scale"
     )
 
-    var isAnimating by remember { mutableStateOf(task.completed) }
+    var isAnimating by rememberSaveable  { mutableStateOf(task.completed) }
 
     val alpha by animateFloatAsState(
         targetValue = if (isAnimating) 0.5f else 1f,

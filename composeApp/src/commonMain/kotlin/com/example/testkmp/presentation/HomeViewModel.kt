@@ -32,6 +32,9 @@ class HomeViewModel(
     var _tasksState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
     val tasksState: StateFlow<DataState<List<Task>>> = _tasksState
 
+    var _floatingButtonState = MutableStateFlow(false)
+    val floatingButtonState: StateFlow<Boolean> = _floatingButtonState
+
 
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
@@ -55,6 +58,21 @@ class HomeViewModel(
                 println(e)
             }
         }
+        updateFloatingButtonStateTrue()
+    }
+
+    fun updateFloatingButtonStateTrue() {
+        viewModelScope.launch {
+            _floatingButtonState.value = true
+        }
+
+    }
+
+    fun updateFloatingButtonStateFalse() {
+        viewModelScope.launch {
+            _floatingButtonState.value = false
+        }
+
     }
 
     fun loadCatsData(userId: String?) {

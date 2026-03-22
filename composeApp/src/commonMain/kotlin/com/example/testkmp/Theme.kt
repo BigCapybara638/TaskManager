@@ -24,6 +24,7 @@ val BackgroundColor = Color(0xFFEAF0F3)
 
 //val ActionButtonColor = Color(0xFFF6E06C)
 val ActionButtonColor = Color(0xFFC96E4A)
+val EnabledActionButtonColor = Color(0xFF9E9D9D)
 
 val PrimaryTextColor = Color(0xFF1A2B3C)
 val IslandColor = Color(0xFFF1F8FF)
