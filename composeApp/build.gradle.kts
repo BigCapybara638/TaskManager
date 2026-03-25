@@ -114,9 +114,14 @@ compose.desktop {
         mainClass = "com.example.testkmp.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.example.testkmp"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "TaskManager"
             packageVersion = "1.0.0"
+
+            windows {
+                menuGroup = "TaskManager"
+                shortcut = true
+            }
         }
     }
 }
