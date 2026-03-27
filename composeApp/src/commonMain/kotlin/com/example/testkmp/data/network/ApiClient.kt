@@ -3,6 +3,8 @@ package com.example.testkmp.data.network
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -22,6 +24,10 @@ class ApiClient(private val engine: HttpClientEngine = createHttpClientEngine())
                 isLenient = true
                 ignoreUnknownKeys = true
             })
+        }
+        defaultRequest {
+            url("https://gigachat.devices.sberbank.ru/api/v1")
+            header("Content-Type", "application/json")
         }
     }
 

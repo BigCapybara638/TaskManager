@@ -40,7 +40,7 @@ fun TaskItem(
 ) {
     val viewModel: HomeViewModel = koinViewModel()
 
-    var checkedState by remember { mutableStateOf(task.completed) }
+    var checkedState by rememberSaveable { mutableStateOf(task.completed) }
 
     var isPressed by rememberSaveable  { mutableStateOf(task.completed) }
     val scale by animateFloatAsState(

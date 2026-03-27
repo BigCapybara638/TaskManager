@@ -1,12 +1,18 @@
 package com.example.testkmp.di
 
-import com.example.testkmp.data.FakeRepositoryImpl
-import com.example.testkmp.data.SupabaseAuthRepositoryImpl
+import com.example.testkmp.data.network.ApiClient
+import com.example.testkmp.data.network.ApiService
+import com.example.testkmp.data.network.createHttpClientEngine
+import com.example.testkmp.data.repositories.ApiRepositoryImpl
+import com.example.testkmp.data.repositories.FakeRepositoryImpl
+import com.example.testkmp.data.repositories.SupabaseAuthRepositoryImpl
+import com.example.testkmp.domain.repositories.ApiRepository
 import com.example.testkmp.domain.repositories.AuthRepository
 import com.example.testkmp.domain.repositories.DatabaseRepository
 import com.example.testkmp.domain.usecases.add.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
+import com.example.testkmp.domain.usecases.GetMessageFromGigachatUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
 import com.example.testkmp.domain.usecases.UpdateCompletedStateUseCase
 import com.example.testkmp.domain.usecases.add.AddTaskUseCase
@@ -16,6 +22,11 @@ import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.HomeViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -42,9 +53,31 @@ val sharedModule = module {
 
     factory { UpdateCompletedStateUseCase(get()) }
 
+    factory { GetMessageFromGigachatUseCase(get()) }
+
     single<DatabaseRepository> { FakeRepositoryImpl() }
 
     single<AuthRepository> { SupabaseAuthRepositoryImpl() }
+
+    single<ApiRepository> { ApiRepositoryImpl(get()) }
+
+    // Services
+    single { ApiService(get()) }
+
+    single<HttpClientEngine> { createHttpClientEngine() }
+
+    single {
+        HttpClient(get()) {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+    }
+
 }
 
 val viewModelModule = module {

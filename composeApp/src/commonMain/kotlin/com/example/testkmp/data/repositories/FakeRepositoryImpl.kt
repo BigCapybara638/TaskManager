@@ -1,10 +1,10 @@
-package com.example.testkmp.data
+package com.example.testkmp.data.repositories
 
+import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
-import com.example.testkmp.domain.repositories.DatabaseRepository
 import com.example.testkmp.domain.models.Task
+import com.example.testkmp.domain.repositories.DatabaseRepository
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext

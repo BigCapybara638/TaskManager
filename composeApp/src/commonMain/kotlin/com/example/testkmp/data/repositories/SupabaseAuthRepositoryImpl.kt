@@ -1,16 +1,13 @@
-package com.example.testkmp.data
+package com.example.testkmp.data.repositories
 
-import androidx.compose.runtime.collectAsState
+import com.example.testkmp.data.supabase
+import com.example.testkmp.domain.models.Result
 import com.example.testkmp.domain.repositories.AuthRepository
 import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.builtin.Email
-import io.github.jan.supabase.auth.user.UserInfo
-import com.example.testkmp.domain.models.Result
-import io.github.jan.supabase.auth.exception.AuthErrorCode
 import io.github.jan.supabase.auth.exception.AuthRestException
+import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import io.github.jan.supabase.auth.user.UserInfo
 
 class SupabaseAuthRepositoryImpl() : AuthRepository {
 

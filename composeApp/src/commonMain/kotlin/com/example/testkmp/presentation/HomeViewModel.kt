@@ -2,12 +2,14 @@ package com.example.testkmp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testkmp.data.models.Message
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.domain.usecases.add.AddCategoryUseCase
 import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
+import com.example.testkmp.domain.usecases.GetMessageFromGigachatUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
 import com.example.testkmp.domain.usecases.UpdateCompletedStateUseCase
 import com.example.testkmp.domain.usecases.add.AddTaskUseCase
@@ -23,6 +25,7 @@ class HomeViewModel(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
     private val getTasksInCategoryUseCase: GetTasksInCategoryUseCase,
+    private val getMessageFromGigachatUseCase: GetMessageFromGigachatUseCase,
     private val updateCompletedStateUseCase: UpdateCompletedStateUseCase,
     ) : ViewModel() {
 
@@ -32,9 +35,15 @@ class HomeViewModel(
     var _tasksState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
     val tasksState: StateFlow<DataState<List<Task>>> = _tasksState
 
+    var _gigachatState = MutableStateFlow<Result<String>>(Result.success(""))
+    val gigachatState: StateFlow<Result<String>> = _gigachatState
+
     var _floatingButtonState = MutableStateFlow(false)
     val floatingButtonState: StateFlow<Boolean> = _floatingButtonState
 
+    init {
+        getMessage()
+    }
 
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
@@ -59,6 +68,17 @@ class HomeViewModel(
             }
         }
         updateFloatingButtonStateTrue()
+    }
+
+    fun getMessage() {
+        viewModelScope.launch {
+            try {
+                _gigachatState.value = getMessageFromGigachatUseCase()
+
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
     }
 
     fun updateFloatingButtonStateTrue() {
