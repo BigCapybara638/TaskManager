@@ -1,6 +1,5 @@
 package com.example.testkmp.di
 
-import com.example.testkmp.data.network.ApiClient
 import com.example.testkmp.data.network.ApiService
 import com.example.testkmp.data.network.createHttpClientEngine
 import com.example.testkmp.data.repositories.ApiRepositoryImpl

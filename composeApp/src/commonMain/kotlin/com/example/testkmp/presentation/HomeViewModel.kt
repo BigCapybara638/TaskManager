@@ -35,7 +35,7 @@ class HomeViewModel(
     var _tasksState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
     val tasksState: StateFlow<DataState<List<Task>>> = _tasksState
 
-    var _gigachatState = MutableStateFlow<Result<String>>(Result.success(""))
+    var _gigachatState = MutableStateFlow(Result.success(""))
     val gigachatState: StateFlow<Result<String>> = _gigachatState
 
     var _floatingButtonState = MutableStateFlow(false)

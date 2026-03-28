@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,10 @@ fun GigachatIsland() {
     val viewModule: HomeViewModel = koinViewModel()
     val text = viewModule.gigachatState.collectAsState()
 
+    LaunchedEffect(text) {
+        println(text)
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -41,8 +46,9 @@ fun GigachatIsland() {
                 shape = RoundedCornerShape(20.dp))
 
     ) {
+
         Text(
-            text = text.value.toString(),
+            text = text.value.getOrNull() ?: "Не удалось сгенерировать ответ",
             color = PrimaryTextColor,
             modifier = Modifier.padding(10.dp)
 
