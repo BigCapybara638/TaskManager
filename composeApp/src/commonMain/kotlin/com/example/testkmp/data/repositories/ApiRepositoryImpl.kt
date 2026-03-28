@@ -8,12 +8,9 @@ class ApiRepositoryImpl(
 ) : ApiRepository {
 
     override suspend fun getMessage(): Result<String> {
-        apiService.sendMessage()
-        return Result.success("d")
-        //apiService.sendMessage()
-//            .map { response ->
-//            response.choices.firstOrNull()?.message?.content ?: ""
-
+        return apiService.sendMessage()
+            .map { response ->
+                response.choices.firstOrNull()?.message?.content ?: ""
+            }
     }
-
 }

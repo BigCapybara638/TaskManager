@@ -16,8 +16,7 @@ data class GigachatApiResponse(
 data class Choice(
     val message: Message,
     val index: Int,
-    @SerialName("finish_reason")
-    val finishReason: String
+    val finish_reason: String
 )
 
 @Serializable
@@ -28,12 +27,12 @@ data class Message(
 
 @Serializable
 data class Usage(
-    @SerialName("prompt_tokens")
-    val promptTokens: Int,
-    @SerialName("completion_tokens")
-    val completionTokens: Int,
-    @SerialName("total_tokens")
-    val totalTokens: Int,
-    @SerialName("precached_prompt_tokens")
-    val precachedPromptTokens: Int? = null // опционально, может отсутствовать
+    //@SerialName("prompt_tokens")
+    val prompt_tokens: Int,
+    //@SerialName("completion_tokens")
+    val completion_tokens: Int,
+    //@SerialName("total_tokens")
+    val total_tokens: Int,
+    //@SerialName("precached_prompt_tokens")
+    val precached_prompt_tokens: Int? = null // опционально, может отсутствовать
 )

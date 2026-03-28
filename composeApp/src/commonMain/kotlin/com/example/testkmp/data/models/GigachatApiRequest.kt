@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GigachatApiRequest(
-    val model: String = "GigaChat-Pro",
+    val model: String,
     val messages: List<GigaChatMessage>,
     val temperature: Double = 1.0,
     //@SerialName("max_tokens")
