@@ -24,7 +24,7 @@ class ApiService(
         coerceInputValues = true
     }
 
-    suspend fun getBearerKey() : Result<GigachatAccessTokenResponse> {
+    private suspend fun getBearerKey() : Result<GigachatAccessTokenResponse> {
         return try {
 
             val url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
@@ -55,7 +55,7 @@ class ApiService(
             val messages = mutableListOf(
                 GigaChatMessage(
                     role = "system",
-                    content = "Тебе прийдет список дел. Ты должен в двух предложениях не списком а цельным текстом ответить, что нужно будет сделать в течении дня, не от своего имени"
+                    content = "Тебе прийдет список дел. Ты должен в двух предложениях не списком а цельным текстом ответить, что нужно будет сделать в течении дня, не от своего имени,  конце вывод не нужен, можешь обобщать задачи в собирательный образ если они похожи между собой"
                 )
             )
 

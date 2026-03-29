@@ -32,6 +32,7 @@ import org.koin.dsl.module
 /** Общий код для всех платформ */
 val sharedModule = module {
 
+    // UseCase`s
     factory { GetAllTasksUseCase(get()) }
 
     factory { GetAllCategoriesUseCase(get()) }
@@ -53,6 +54,8 @@ val sharedModule = module {
     factory { UpdateCompletedStateUseCase(get()) }
 
     factory { GetMessageFromGigachatUseCase(get()) }
+
+    // Repositories
 
     single<DatabaseRepository> { FakeRepositoryImpl() }
 
