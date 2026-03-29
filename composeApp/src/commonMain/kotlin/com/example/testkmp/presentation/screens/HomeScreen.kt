@@ -15,6 +15,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -29,19 +32,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
+import com.example.testkmp.EnabledActionButtonColor
+import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Categories
+import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.AddCategoryDialog
 import com.example.testkmp.presentation.components.CategoriesItem
+import com.example.testkmp.presentation.components.GigachatIsland
 import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -55,25 +63,53 @@ fun HomeScreen(
         val viewModel: HomeViewModel = koinViewModel()
         val authViewModel: AuthViewModel = koinViewModel()
 
-
         // collectAsState - не привязан к жц, collectAsStateWithLifecycle - привязан, актулально только для Android
         val dataState by viewModel.dataState.collectAsState()
+        val tasksState by viewModel.tasksState.collectAsState()
+        val floatingButtonState by viewModel.floatingButtonState.collectAsState()
         var showAddCategoryDialog by remember { mutableStateOf(false) }
 
+        val userId = supabase.auth.currentSessionOrNull()!!.user!!.id
+
         LaunchedEffect(Unit) {
-            viewModel.loadCatsData(supabase.auth.currentSessionOrNull()!!.user!!.id)
+            viewModel.loadCatsData(userId)
         }
 
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        showAddCategoryDialog = true
-                    },
-                    containerColor = ActionButtonColor,
+                Column(
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Text("+")
+                    Text(
+                        text = "↻",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(bottom = 6.dp)
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (floatingButtonState) ActionButtonColor else EnabledActionButtonColor)
+                            .clickable {
+                                if (floatingButtonState) {
+                                    viewModel.loadTasksData(userId)
+                                    viewModel.updateFloatingButtonStateFalse()
+                                }
+                            }
+                            .padding(bottom = 4.dp)
+                    )
+
+
+                    FloatingActionButton(
+                        onClick = {
+                            showAddCategoryDialog = true
+                        },
+                        containerColor = ActionButtonColor,
+                    ) {
+                        Text("+")
+                    }
                 }
+
             },
 
             floatingActionButtonPosition = FabPosition.End
@@ -97,7 +133,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.85F)
                                 .height(2.dp)
-                                .background(Color.Gray)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(PrimaryTextColor)
                         )
                         Box(
                             contentAlignment = Alignment.Center,
@@ -131,7 +168,8 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth(0.85F)
                                 .height(2.dp)
-                                .background(Color.Gray)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(PrimaryTextColor)
                         )
 
                         CircularProgressIndicator(
@@ -169,8 +207,11 @@ fun HomeScreen(
                                     modifier = Modifier
                                         .fillMaxWidth(0.85F)
                                         .height(2.dp)
-                                        .background(Color.Gray)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(PrimaryTextColor)
                                 )
+
+                                GigachatIsland()
 
                                 Text(
                                     text = "Выйти",
@@ -186,7 +227,19 @@ fun HomeScreen(
                         }
                         items(state.data) { item ->
                             CategoriesItem(
+                                supabase.auth.currentSessionOrNull()!!.user!!.id,
                                 item,
+                                when(tasksState) {
+                                    is DataState.Error -> {
+                                        emptyList()
+                                    }
+                                    is DataState.Loading -> {
+                                        emptyList()
+                                    }
+                                    is DataState.Success -> {
+                                        (tasksState as DataState.Success<List<Task>>).data.filter { it.category_id == item.id }
+                                    }
+                                },
                                 {
 
                                 }

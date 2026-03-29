@@ -34,6 +34,8 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
+            implementation("io.ktor:ktor-client-okhttp:3.4.1")
+            implementation("com.squareup.okhttp3:okhttp:5.3.2")
 
         }
         commonMain.dependencies {
@@ -45,6 +47,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            //implementation(libs.kotlinx.serialization.json )
 
             // Koin
             implementation(libs.koin.core)
@@ -114,9 +117,14 @@ compose.desktop {
         mainClass = "com.example.testkmp.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.example.testkmp"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "TaskManager"
             packageVersion = "1.0.0"
+
+            windows {
+                menuGroup = "TaskManager"
+                shortcut = true
+            }
         }
     }
 }

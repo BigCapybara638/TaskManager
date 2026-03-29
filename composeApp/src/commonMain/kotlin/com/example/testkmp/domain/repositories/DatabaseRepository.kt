@@ -7,11 +7,13 @@ interface DatabaseRepository {
 
     suspend fun addCategory(category: Categories)
 
-    //suspend
-    fun getTasksList() : List<Task>
+    suspend fun addTask(task: Task)
+
+    suspend fun getTasksList(userId: String) : List<Task>
 
     suspend fun getCategoriesList(userId: String) : List<Categories>
 
     suspend fun getTasksInCategory(category: Categories) : List<Task>
 
+    suspend fun updateIsCompleteState(task: Task)
 }

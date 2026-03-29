@@ -45,6 +45,7 @@ fun App(modifier: Modifier) {
         val navController = rememberNavController()
 
         val sessionStatus by authViewModel.startAuthState.collectAsState()
+        println(sessionStatus)
 
         LaunchedEffect(Unit) {
             authViewModel.checkAuthState()
