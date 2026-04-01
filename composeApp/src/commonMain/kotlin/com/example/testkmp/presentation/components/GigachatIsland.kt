@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.example.testkmp.IslandColor
 import com.example.testkmp.PrimaryTextColor
@@ -28,10 +29,6 @@ fun GigachatIsland() {
 
     val viewModule: HomeViewModel = koinViewModel()
     val text = viewModule.gigachatState.collectAsState()
-
-    LaunchedEffect(text) {
-        println(text)
-    }
 
     Box(
         contentAlignment = Alignment.Center,

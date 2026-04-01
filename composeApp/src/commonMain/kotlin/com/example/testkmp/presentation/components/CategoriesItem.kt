@@ -6,8 +6,10 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.TaskManagerTheme
 import com.example.testkmp.data.supabase
@@ -42,6 +47,8 @@ import com.example.testkmp.presentation.HomeViewModel
 import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
+
+//@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesItem(
     userId: String,
@@ -50,6 +57,7 @@ fun CategoriesItem(
     onClick: () -> Unit
 ) {
     val viewModel: HomeViewModel = koinViewModel()
+    var showMenu by rememberSaveable { mutableStateOf(false) }
 
     var state by rememberSaveable { mutableStateOf(false) }
 
@@ -58,11 +66,19 @@ fun CategoriesItem(
             .fillMaxWidth()
             .padding(2.dp)
             .clip(RoundedCornerShape(15.dp))
-            .clickable{
-                state = !state
-            }
+//            .clickable{
+//                state = !state
+//            }
+            .combinedClickable(
+                onClick = {
+                    state = !state},
+                onLongClick = {
+                    showMenu = !showMenu
+                }
+            )
             .background(Color.White)
             .padding(10.dp)
+
     ) {
         Text(text = cats.name,
             color = PrimaryTextColor,
@@ -88,6 +104,34 @@ fun CategoriesItem(
                 userId = userId,
                 categories = cats,
                 tasks = tasksList
+            )
+        }
+
+        DropdownMenu(
+            expanded = showMenu,
+            containerColor = BackgroundColor,
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.padding(horizontal = 10.dp),
+            onDismissRequest = { showMenu = false }
+
+        ) {
+            DropdownMenuItem(
+                modifier = Modifier.clip(RoundedCornerShape(14.dp)),
+                text = {
+                    Text("Изменить название")
+                },
+                onClick = {
+                    showMenu = false
+                }
+            )
+            DropdownMenuItem(
+                modifier = Modifier.clip(RoundedCornerShape(14.dp)),
+                text = {
+                    Text("Удалить", color = Color.Red)
+                },
+                onClick = {
+                    showMenu = false
+                }
             )
         }
     }
