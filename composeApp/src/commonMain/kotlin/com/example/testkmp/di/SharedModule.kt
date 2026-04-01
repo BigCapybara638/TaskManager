@@ -20,6 +20,7 @@ import com.example.testkmp.domain.usecases.auth.SignInUseCase
 import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import com.example.testkmp.domain.usecases.delete.DeleteCategoryUseCase
+import com.example.testkmp.domain.usecases.delete.DeleteTaskUseCase
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.HomeViewModel
 import io.ktor.client.HttpClient
@@ -55,6 +56,8 @@ val sharedModule = module {
     factory { UpdateCompletedStateUseCase(get()) }
 
     factory { GetMessageFromGigachatUseCase(get()) }
+
+    factory { DeleteTaskUseCase(get()) }
 
     factory { DeleteCategoryUseCase(get()) }
 

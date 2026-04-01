@@ -8,12 +8,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.testkmp.BackgroundColor
 import com.example.testkmp.data.supabase
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
@@ -43,6 +47,9 @@ fun TaskItem(
     var checkedState by rememberSaveable { mutableStateOf(task.completed) }
 
     var isPressed by rememberSaveable  { mutableStateOf(task.completed) }
+
+    var showMenu by rememberSaveable { mutableStateOf(false) }
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
         animationSpec = spring(
@@ -69,12 +76,16 @@ fun TaskItem(
             .fillMaxWidth()
             .padding(2.dp)
             .clip(RoundedCornerShape(15.dp))
-            .clickable{
-                viewModel.updateIsCompletedState(task)
-                checkedState = !checkedState
-                isPressed = !isPressed
-                isAnimating = !isAnimating
-            }
+            .combinedClickable(
+                onClick = {
+                    viewModel.updateIsCompletedState(task)
+                    checkedState = !checkedState
+                    isPressed = !isPressed
+                    isAnimating = !isAnimating},
+                onLongClick = {
+                    showMenu = !showMenu
+                }
+            )
             .background(Color.White)
             .padding(6.dp)
             .graphicsLayer {
@@ -97,5 +108,34 @@ fun TaskItem(
             modifier = Modifier
                 .padding(start = 10.dp)
         )
+
+        DropdownMenu(
+            expanded = showMenu,
+            containerColor = BackgroundColor,
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier.padding(horizontal = 10.dp),
+            onDismissRequest = { showMenu = false }
+
+        ) {
+            DropdownMenuItem(
+                modifier = Modifier.clip(RoundedCornerShape(14.dp)),
+                text = {
+                    Text("Изменить название")
+                },
+                onClick = {
+                    showMenu = false
+                }
+            )
+            DropdownMenuItem(
+                modifier = Modifier.clip(RoundedCornerShape(14.dp)),
+                text = {
+                    Text("Удалить", color = Color.Red)
+                },
+                onClick = {
+                    viewModel.deleteTask(task)
+                    showMenu = false
+                }
+            )
+        }
     }
 }

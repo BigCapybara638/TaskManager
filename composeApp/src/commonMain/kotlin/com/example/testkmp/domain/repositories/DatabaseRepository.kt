@@ -18,4 +18,6 @@ interface DatabaseRepository {
     suspend fun updateIsCompleteState(task: Task)
 
     suspend fun deleteCategory(category: Categories)
+
+    suspend fun deleteTask(task: Task)
 }
