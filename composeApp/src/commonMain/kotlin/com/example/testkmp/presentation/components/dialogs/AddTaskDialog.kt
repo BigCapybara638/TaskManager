@@ -1,4 +1,4 @@
-package com.example.testkmp.presentation.components
+package com.example.testkmp.presentation.components.dialogs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

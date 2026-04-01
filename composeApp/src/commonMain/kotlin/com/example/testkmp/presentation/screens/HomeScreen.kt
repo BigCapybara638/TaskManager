@@ -2,7 +2,6 @@ package com.example.testkmp.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -47,7 +44,7 @@ import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
-import com.example.testkmp.presentation.components.AddCategoryDialog
+import com.example.testkmp.presentation.components.dialogs.AddCategoryDialog
 import com.example.testkmp.presentation.components.CategoriesItem
 import com.example.testkmp.presentation.components.GigachatIsland
 import io.github.jan.supabase.auth.auth
