@@ -80,6 +80,17 @@ class FakeRepositoryImpl : DatabaseRepository {
         }
     }
 
+    override suspend fun deleteCategory(category: Categories) {
+        withContext(Dispatchers.IO) {
+            supabase.from("categories")
+                .delete {
+                    filter {
+                        eq("id", category.id!!)
+                    }
+                }
+        }
+    }
+
     override suspend fun addTask(task: Task) {
         withContext(Dispatchers.IO) {
             supabase.from("tasks").insert(task)

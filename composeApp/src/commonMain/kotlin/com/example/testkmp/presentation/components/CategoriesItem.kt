@@ -130,6 +130,7 @@ fun CategoriesItem(
                     Text("Удалить", color = Color.Red)
                 },
                 onClick = {
+                    viewModel.deleteCategory(cats)
                     showMenu = false
                 }
             )

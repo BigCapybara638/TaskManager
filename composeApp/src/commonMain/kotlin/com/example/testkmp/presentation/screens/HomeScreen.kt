@@ -173,11 +173,9 @@ fun HomeScreen(
                         )
 
                         CircularProgressIndicator(
-                            strokeWidth = 10.dp,
                             modifier = Modifier
-                                .padding(top = 40.dp)
-                                .size(70.dp)
-
+                                .padding(top = 60.dp)
+                                .size(90.dp)
                         )
                     }
                 }

@@ -13,6 +13,7 @@ import com.example.testkmp.domain.usecases.GetMessageFromGigachatUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
 import com.example.testkmp.domain.usecases.UpdateCompletedStateUseCase
 import com.example.testkmp.domain.usecases.add.AddTaskUseCase
+import com.example.testkmp.domain.usecases.delete.DeleteCategoryUseCase
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,7 @@ class HomeViewModel(
     private val getTasksInCategoryUseCase: GetTasksInCategoryUseCase,
     private val getMessageFromGigachatUseCase: GetMessageFromGigachatUseCase,
     private val updateCompletedStateUseCase: UpdateCompletedStateUseCase,
+    private val deleteCategoryUseCase: DeleteCategoryUseCase
     ) : ViewModel() {
 
     var _dataState = MutableStateFlow<DataState<List<Categories>>>(DataState.Loading)
@@ -129,6 +131,13 @@ class HomeViewModel(
             result = getTasksInCategoryUseCase(category)
         }
         return result
+    }
+
+    fun deleteCategory(category: Categories) {
+        viewModelScope.launch {
+            deleteCategoryUseCase(category)
+        }
+        loadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
     }
 
 
