@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,9 +24,9 @@ import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.serialization.Serializable
 import org.koin.compose.KoinApplication
 import com.example.testkmp.SignUp
+import com.example.testkmp.presentation.screens.LoadingScreen
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserSession
-
 
 @Serializable
 object SignIn
@@ -33,6 +36,9 @@ object SignUp
 
 @Serializable
 object Home
+
+@Serializable
+object Loading  // Add Loading destination
 
 @Composable
 fun App(modifier: Modifier) {
@@ -45,45 +51,60 @@ fun App(modifier: Modifier) {
         val navController = rememberNavController()
 
         val sessionStatus by authViewModel.startAuthState.collectAsState()
-        println(sessionStatus)
+
+        var isAuthCheckComplete by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
             authViewModel.checkAuthState()
+            isAuthCheckComplete = true
         }
 
-        val startDestination = when (sessionStatus) {
-            is SessionStatus.Authenticated -> Home
+        val startDestination = when {
+            !isAuthCheckComplete -> Loading
+            sessionStatus is SessionStatus.Authenticated -> Home
             else -> SignIn
         }
 
         NavHost(
             navController = navController,
             startDestination = startDestination
-
         ) {
+            composable<Loading> {
+                LoadingScreen(
+                    modifier = modifier
+                )
+            }
+
             composable<Home> {
-                //val home: Home = backStackEntry.toRoute()
                 HomeScreen(
                     modifier = modifier,
                     onNavigateToSignIn = {
-                        navController.navigate(SignIn)
+                        navController.navigate(SignIn) {
+                            popUpTo(Home) { inclusive = true }
+                        }
                     }
                 )
             }
+
             composable<SignIn> {
                 SignInScreen(
                     onNavigateToSignUp = {
                         navController.navigate(SignUp)
                     },
                     onNavigateToHome = {
-                        navController.navigate(Home)
+                        navController.navigate(Home) {
+                            popUpTo(SignIn) { inclusive = true }
+                        }
                     }
                 )
             }
+
             composable<SignUp> {
                 SignUpScreen(
                     onNavigateToHome = {
-                        navController.navigate(Home)
+                        navController.navigate(Home) {
+                            popUpTo(SignUp) { inclusive = true }
+                        }
                     },
                     onNavigateToSignIn = {
                         navController.navigate(SignIn)
