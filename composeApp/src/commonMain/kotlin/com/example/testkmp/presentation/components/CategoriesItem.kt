@@ -7,18 +7,24 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,10 +35,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
+import com.example.testkmp.SecondaryTextColor
 import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
@@ -46,15 +54,18 @@ fun CategoriesItem(
     userId: String,
     cats: Categories,
     tasksList: List<Task>,
+    modifier: Modifier,
     onClick: () -> Unit
 ) {
     val viewModel: HomeViewModel = koinViewModel()
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
     var state by rememberSaveable { mutableStateOf(false) }
+    var showAddTaskDialog by remember { mutableStateOf(false) }
+
 
     Column (
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(2.dp)
             .clip(RoundedCornerShape(15.dp))
@@ -63,7 +74,9 @@ fun CategoriesItem(
 //            }
             .combinedClickable(
                 onClick = {
-                    state = !state},
+                    state = !state
+                    viewModel.loadTasksData(userId)
+                },
                 onLongClick = {
                     showMenu = !showMenu
                 }
@@ -72,12 +85,30 @@ fun CategoriesItem(
             .padding(10.dp)
 
     ) {
-        Text(text = cats.name,
-            color = PrimaryTextColor,
-            fontSize = 24.sp,
-            modifier = Modifier
-                .padding(start = 10.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = cats.name,
+                color = PrimaryTextColor,
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+
+            Text(
+                text = " + ",
+                color = SecondaryTextColor,
+                fontSize = 26.sp,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable {
+                        showAddTaskDialog = true
+                    }
+            )
+        }
 
         AnimatedVisibility(
             visible = state,
@@ -127,6 +158,22 @@ fun CategoriesItem(
                 }
             )
         }
+        if (showAddTaskDialog) {
+            AddTaskDialog(
+                onDismiss = { showAddTaskDialog = false },
+                onConfirm = { title, description ->
+                    viewModel.addTask(
+                        Task(
+                            name = title,
+                            description = description,
+                            category_id = cats.id!!,
+                            user_id = userId
+                        )
+                    )
+                    showAddTaskDialog = false
+                }
+            )
+        }
     }
 }
 
@@ -136,7 +183,6 @@ fun TasksListContent(
     categories: Categories,
     tasks: List<Task>,
 ) {
-    var showAddTaskDialog by remember { mutableStateOf(false) }
     val viewModel: HomeViewModel = koinViewModel()
 
     Column(
@@ -144,15 +190,6 @@ fun TasksListContent(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(0.65F)
-                .padding(end = 2.dp),
-
-            onClick = { showAddTaskDialog = true }
-        ) {
-            Text("Добавить задачу")
-        }
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -175,24 +212,6 @@ fun TasksListContent(
                 Spacer(modifier = Modifier.height(2.dp))
             }
         }
-    }
-
-    // Диалог добавления задачи
-    if (showAddTaskDialog) {
-        AddTaskDialog(
-            onDismiss = { showAddTaskDialog = false },
-            onConfirm = { title, description ->
-                viewModel.addTask(
-                    Task(
-                        name = title,
-                        description = description,
-                        category_id = categories.id!!,
-                        user_id = userId
-                    )
-                )
-                showAddTaskDialog = false
-            }
-        )
     }
 }
 

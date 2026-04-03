@@ -15,28 +15,31 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.example.testkmp.PrimaryTextColor
+import com.example.testkmp.TaskManagerTheme
 
 @Composable
 fun LoadingScreen(modifier: Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    TaskManagerTheme {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(70.dp),
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(70.dp),
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Loading...",
-                style = MaterialTheme.typography.bodyLarge,
-                color = PrimaryTextColor
-            )
+                Text(
+                    text = "Loading...",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = PrimaryTextColor
+                )
+            }
         }
     }
 }

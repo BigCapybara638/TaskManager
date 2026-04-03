@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
-class FakeRepositoryImpl : DatabaseRepository {
+class DatabaseRepositoryImpl : DatabaseRepository {
 
     //val db = FakeDatabase()
 
@@ -52,25 +52,40 @@ class FakeRepositoryImpl : DatabaseRepository {
         }
     }
 
+    override suspend fun updateTask(task: Task) {
+        withContext(Dispatchers.IO) {
+            try {
+                supabase
+                    .from("tasks")
+                    .update(task) {
+                        filter {
+                            eq("id", task.id!!)
+                        }
+                    }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
     override suspend fun updateIsCompleteState(task: Task) {
         withContext(Dispatchers.IO) {
-            withContext(Dispatchers.IO) {
-                try {
-                    supabase
-                        .from("tasks")
-                        .update(
-                            {
-                                set("completed", !task.completed)
-                            }
-                        ) {
-                            filter {
-                                eq("id", task.id!!)
-                            }
+            try {
+                supabase
+                    .from("tasks")
+                    .update(
+                        {
+                            set("completed", !task.completed)
                         }
-                } catch (e: Exception) {
-                    throw e
-                }
+                    ) {
+                        filter {
+                            eq("id", task.id!!)
+                        }
+                    }
+            } catch (e: Exception) {
+                throw e
             }
+
         }
     }
 

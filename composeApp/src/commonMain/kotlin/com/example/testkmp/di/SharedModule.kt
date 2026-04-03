@@ -3,7 +3,7 @@ package com.example.testkmp.di
 import com.example.testkmp.data.network.ApiService
 import com.example.testkmp.data.network.createHttpClientEngine
 import com.example.testkmp.data.repositories.ApiRepositoryImpl
-import com.example.testkmp.data.repositories.FakeRepositoryImpl
+import com.example.testkmp.data.repositories.DatabaseRepositoryImpl
 import com.example.testkmp.data.repositories.SupabaseAuthRepositoryImpl
 import com.example.testkmp.domain.repositories.ApiRepository
 import com.example.testkmp.domain.repositories.AuthRepository
@@ -13,7 +13,7 @@ import com.example.testkmp.domain.usecases.GetAllCategoriesUseCase
 import com.example.testkmp.domain.usecases.GetAllTasksUseCase
 import com.example.testkmp.domain.usecases.GetMessageFromGigachatUseCase
 import com.example.testkmp.domain.usecases.GetTasksInCategoryUseCase
-import com.example.testkmp.domain.usecases.UpdateCompletedStateUseCase
+import com.example.testkmp.domain.usecases.update.UpdateCompletedStateUseCase
 import com.example.testkmp.domain.usecases.add.AddTaskUseCase
 import com.example.testkmp.domain.usecases.auth.CheckAuthorizationStateUseCase
 import com.example.testkmp.domain.usecases.auth.SignInUseCase
@@ -21,6 +21,7 @@ import com.example.testkmp.domain.usecases.auth.SignOutUseCase
 import com.example.testkmp.domain.usecases.auth.SignUpUseCase
 import com.example.testkmp.domain.usecases.delete.DeleteCategoryUseCase
 import com.example.testkmp.domain.usecases.delete.DeleteTaskUseCase
+import com.example.testkmp.domain.usecases.update.UpdateTaskUseCase
 import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.HomeViewModel
 import io.ktor.client.HttpClient
@@ -55,6 +56,8 @@ val sharedModule = module {
 
     factory { UpdateCompletedStateUseCase(get()) }
 
+    factory { UpdateTaskUseCase(get()) }
+
     factory { GetMessageFromGigachatUseCase(get()) }
 
     factory { DeleteTaskUseCase(get()) }
@@ -63,7 +66,7 @@ val sharedModule = module {
 
     // Repositories
 
-    single<DatabaseRepository> { FakeRepositoryImpl() }
+    single<DatabaseRepository> { DatabaseRepositoryImpl() }
 
     single<AuthRepository> { SupabaseAuthRepositoryImpl() }
 

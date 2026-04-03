@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -178,25 +179,35 @@ fun HomeScreen(
                 }
 
                 is DataState.Success -> {
+                    val tasksByCategory = remember(tasksState, state.data) {
+                        derivedStateOf {
+                            when (tasksState) {
+                                is DataState.Error -> emptyMap()
+                                is DataState.Loading -> emptyMap()
+                                is DataState.Success -> {
+                                    (tasksState as DataState.Success<List<Task>>).data
+                                        .groupBy { it.category_id }
+                                }
+                            }
+                        }
+                    }
+
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(300.dp),
                         modifier = modifier.padding(horizontal = 6.dp),
                         userScrollEnabled = true,
                     ) {
-
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(bottom = 8.dp)
-
                             ) {
                                 Text(
                                     text = "Категории",
                                     fontSize = 24.sp,
-                                    modifier = Modifier
-                                        .padding(top = 18.dp, bottom = 6.dp)
+                                    modifier = Modifier.padding(top = 18.dp, bottom = 6.dp)
                                 )
                                 Spacer(
                                     modifier = Modifier
@@ -211,33 +222,26 @@ fun HomeScreen(
                                 Text(
                                     text = "Выйти",
                                     fontSize = 24.sp,
-                                    modifier = Modifier
-                                        .clickable{
-                                            authViewModel.signOut()
-                                            onNavigateToSignIn()
-                                        }
+                                    modifier = Modifier.clickable {
+                                        authViewModel.signOut()
+                                        onNavigateToSignIn()
+                                    }
                                 )
                             }
-
                         }
-                        items(state.data) { item ->
-                            CategoriesItem(
-                                supabase.auth.currentSessionOrNull()!!.user!!.id,
-                                item,
-                                when(tasksState) {
-                                    is DataState.Error -> {
-                                        emptyList()
-                                    }
-                                    is DataState.Loading -> {
-                                        emptyList()
-                                    }
-                                    is DataState.Success -> {
-                                        (tasksState as DataState.Success<List<Task>>).data.filter { it.category_id == item.id }
-                                    }
-                                },
-                                {
 
-                                }
+                        items(
+                            items = state.data,
+                            key = { it.id!! },
+                            ) { item ->
+                            val categoryTasks = tasksByCategory.value[item.id] ?: emptyList()
+
+                            CategoriesItem(
+                                userId,
+                                item,
+                                categoryTasks,
+                                Modifier.animateItem(),
+                                {viewModel.loadTasksData(userId)}
                             )
                         }
                     }

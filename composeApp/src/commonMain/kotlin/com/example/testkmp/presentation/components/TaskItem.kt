@@ -87,7 +87,7 @@ fun TaskItem(
                 }
             )
             .background(Color.White)
-            .padding(6.dp)
+            .padding(2.dp)
             .graphicsLayer {
                 this.alpha = alpha
                 this.scaleX = scale
@@ -104,7 +104,7 @@ fun TaskItem(
             }
         )
         Text(text = task.name,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             modifier = Modifier
                 .padding(start = 10.dp)
         )
