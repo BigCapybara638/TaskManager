@@ -56,7 +56,7 @@ class HomeViewModel(
     fun addCategory(category: Categories)  {
         viewModelScope.launch {
             addCategoryUseCase(category)
-            loadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
+            reloadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
         }
     }
 
@@ -106,6 +106,19 @@ class HomeViewModel(
 
     fun loadCatsData(userId: String?) {
         loadTasksData(userId)
+        viewModelScope.launch {
+            //_dataState.value = DataState.Loading
+            try {
+                val result = DataState.Success(getAllCategoriesUseCase.invoke(userId!!))
+                _dataState.value = result
+            } catch (e: Exception) {
+                _dataState.value = DataState.Error(e)
+                println(e.message.toString())
+            }
+        }
+    }
+
+    fun reloadCatsData(userId: String?) {
         viewModelScope.launch {
             //_dataState.value = DataState.Loading
             try {
