@@ -171,7 +171,7 @@ class HomeViewModel(
         viewModelScope.launch {
             deleteCategoryUseCase(category)
         }
-        loadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
+        reloadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
     }
 
 
