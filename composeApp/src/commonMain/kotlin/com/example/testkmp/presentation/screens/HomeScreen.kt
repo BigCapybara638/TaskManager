@@ -241,7 +241,7 @@ fun HomeScreen(
                                 item,
                                 categoryTasks,
                                 Modifier.animateItem(),
-                                {viewModel.loadTasksData(userId)}
+                                {}
                             )
                         }
                     }

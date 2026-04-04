@@ -75,7 +75,7 @@ fun CategoriesItem(
             .combinedClickable(
                 onClick = {
                     state = !state
-                    viewModel.loadTasksData(userId)
+                    //viewModel.loadTasksData(userId)
                 },
                 onLongClick = {
                     showMenu = !showMenu

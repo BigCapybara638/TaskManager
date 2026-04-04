@@ -20,6 +20,7 @@ import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -40,7 +41,7 @@ class HomeViewModel(
     val dataState: StateFlow<DataState<List<Categories>>> = _dataState
 
     var _tasksState = MutableStateFlow<DataState<List<Task>>>(DataState.Loading)
-    val tasksState: StateFlow<DataState<List<Task>>> = _tasksState
+    val tasksState: StateFlow<DataState<List<Task>>> = _tasksState.asStateFlow()
 
     var _gigachatState = MutableStateFlow(Result.success(""))
     val gigachatState: StateFlow<Result<String>> = _gigachatState
@@ -120,7 +121,7 @@ class HomeViewModel(
     fun loadTasksData(userId: String?) {
 
         viewModelScope.launch {
-            //_tasksState.value = DataState.Loading
+            _tasksState.value = DataState.Loading
             try {
                 val result = DataState.Success(getAllTasksUseCase.invoke(userId!!))
                 _tasksState.value = result
