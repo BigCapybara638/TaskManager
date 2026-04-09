@@ -8,6 +8,8 @@ import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 
 class SupabaseAuthRepositoryImpl() : AuthRepository {
 
@@ -15,7 +17,7 @@ class SupabaseAuthRepositoryImpl() : AuthRepository {
 
 
     override suspend fun checkAuthorizationState(): SessionStatus {
-        return auth.sessionStatus.value
+        return auth.sessionStatus.first { it != SessionStatus.Initializing }
     }
 
     override suspend fun signUp(
