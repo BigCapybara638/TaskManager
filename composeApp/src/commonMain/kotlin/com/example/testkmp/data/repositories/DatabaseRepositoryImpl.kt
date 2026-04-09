@@ -57,7 +57,12 @@ class DatabaseRepositoryImpl : DatabaseRepository {
             try {
                 supabase
                     .from("tasks")
-                    .update(task) {
+                    .update(
+                        mapOf(
+                            "name" to task.name,
+                            "description" to task.description
+                        )
+                    ) {
                         filter {
                             eq("id", task.id!!)
                         }

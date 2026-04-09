@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.testkmp.BackgroundColor
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -27,12 +29,13 @@ fun UpdateTaskDialog(
 ) {
     val viewModel: HomeViewModel = koinViewModel()
 
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf(task.name) }
+    var description by remember { mutableStateOf(task.description) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Новая задача") },
+        title = { Text("Изменение задачи") },
+        containerColor = BackgroundColor,
         text = {
             Column {
                 OutlinedTextField(
@@ -46,19 +49,19 @@ fun UpdateTaskDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = description,
+                    value = description ?: "",
                     onValueChange = { description = it },
-                    label = { Text("Описание (необязательно)") },
+                    label = { Text("Описание") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { onConfirm(title, description.ifBlank { null }) },
+                onClick = { onConfirm(title, description?.ifBlank { null }) },
                 enabled = title.isNotBlank()
             ) {
-                Text("Добавить")
+                Text("Изменить")
             }
         },
         dismissButton = {
@@ -68,3 +71,9 @@ fun UpdateTaskDialog(
         }
     )
 }
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DialogPreview() {
+//    UpdateTaskDialog(Task(name="Пососать", user_id = "", category_id = 1L), {}, {a,b -> println()})
+//}

@@ -158,6 +158,7 @@ class HomeViewModel(
             updateTaskUseCase(task)
             loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
         }
+        reloadCatsData(supabase.auth.currentSessionOrNull()?.user?.id)
     }
 
     fun deleteTask(task: Task) {

@@ -33,8 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.data.supabase
+import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
+import com.example.testkmp.presentation.components.dialogs.AddCategoryDialog
+import com.example.testkmp.presentation.components.dialogs.UpdateTaskDialog
 import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -49,6 +52,7 @@ fun TaskItem(
     var isPressed by rememberSaveable  { mutableStateOf(task.completed) }
 
     var showMenu by rememberSaveable { mutableStateOf(false) }
+    var showUpdateDialog by rememberSaveable { mutableStateOf(false) }
 
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
@@ -123,6 +127,7 @@ fun TaskItem(
                     Text("Изменить название")
                 },
                 onClick = {
+                    showUpdateDialog = true
                     showMenu = false
                 }
             )
@@ -134,6 +139,17 @@ fun TaskItem(
                 onClick = {
                     viewModel.deleteTask(task)
                     showMenu = false
+                }
+            )
+        }
+
+        if (showUpdateDialog) {
+            UpdateTaskDialog(
+                task = task,
+                onDismiss = { showUpdateDialog = false },
+                onConfirm = { title, description ->
+                    viewModel.updateTask(task)
+                    showUpdateDialog = false
                 }
             )
         }
