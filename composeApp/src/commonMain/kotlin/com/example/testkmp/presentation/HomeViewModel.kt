@@ -17,6 +17,7 @@ import com.example.testkmp.domain.usecases.delete.DeleteCategoryUseCase
 import com.example.testkmp.domain.usecases.delete.DeleteTaskUseCase
 import com.example.testkmp.domain.usecases.update.UpdateTaskUseCase
 import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +37,8 @@ class HomeViewModel(
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase
     ) : ViewModel() {
+
+    private var updateJob: Job? = null
 
     var _dataState = MutableStateFlow<DataState<List<Categories>>>(DataState.Loading)
     val dataState: StateFlow<DataState<List<Categories>>> = _dataState
@@ -68,15 +71,27 @@ class HomeViewModel(
     }
 
     fun updateIsCompletedState(task: Task) {
-        viewModelScope.launch {
+
+        // обновление задачи заранее для мнгновенного отклика
+        val newList = (_tasksState.value as? DataState.Success)?.data?.map {
+            if (it.id == task.id) it.copy(completed = !it.completed) else it
+        } ?: return
+        _tasksState.value = DataState.Success(newList)
+
+        // отмена ранее начатых корутин
+        updateJob?.cancel()
+        updateJob = viewModelScope.launch {
             try {
+                // запрос в бд + реальное обновление списка
                 updateCompletedStateUseCase(task)
+                loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
             } catch (e: Exception) {
                 println(e)
+                // обновление списка если была ошибка
+                loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
             }
         }
         updateFloatingButtonStateTrue()
-        //loadTasksData(supabase.auth.currentSessionOrNull()?.user?.id)
     }
 
     fun getMessage() {
@@ -107,7 +122,7 @@ class HomeViewModel(
     fun loadCatsData(userId: String?) {
         loadTasksData(userId)
         viewModelScope.launch {
-            //_dataState.value = DataState.Loading
+            _dataState.value = DataState.Loading
             try {
                 val result = DataState.Success(getAllCategoriesUseCase.invoke(userId!!))
                 _dataState.value = result
@@ -134,7 +149,7 @@ class HomeViewModel(
     fun loadTasksData(userId: String?) {
 
         viewModelScope.launch {
-            _tasksState.value = DataState.Loading
+            //_tasksState.value = DataState.Loading
             try {
                 val result = DataState.Success(getAllTasksUseCase.invoke(userId!!))
                 _tasksState.value = result

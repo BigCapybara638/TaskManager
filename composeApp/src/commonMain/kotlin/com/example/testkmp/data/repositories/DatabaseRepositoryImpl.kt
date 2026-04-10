@@ -5,6 +5,7 @@ import com.example.testkmp.domain.models.Categories
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.domain.repositories.DatabaseRepository
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -21,6 +22,7 @@ class DatabaseRepositoryImpl : DatabaseRepository {
                     filter {
                         Task::user_id eq userId
                     }
+                    order("id", Order.DESCENDING)
                 }
                 .decodeList<Task>()
         }

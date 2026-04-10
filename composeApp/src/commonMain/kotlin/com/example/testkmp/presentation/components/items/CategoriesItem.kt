@@ -189,21 +189,13 @@ fun TasksListContent(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        val completedTasks = tasks.filter { it.completed }
-        val notCompletedTasks = tasks.filter { !it.completed }
-
         if (tasks.isEmpty()) {
             EmptyTasksPlaceholder()
         } else {
-            ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""))
-            notCompletedTasks.forEach { task ->
+            ReminderItem(viewModel, Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""))
+            tasks.forEach { task ->
                 TaskItem(
-                    task = task,
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-            }
-            completedTasks.forEach { task ->
-                TaskItem(
+                    viewModel = viewModel,
                     task = task,
                 )
                 Spacer(modifier = Modifier.height(2.dp))

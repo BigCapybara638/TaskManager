@@ -43,11 +43,11 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ReminderItem(
+    viewModel: HomeViewModel,
     reminder: Reminder
 ) {
-    val viewModel: HomeViewModel = koinViewModel()
 
-    var checkedState by rememberSaveable { mutableStateOf(false) }
+    var checkedState by rememberSaveable { mutableStateOf(reminder.completed) }
 
     var isPressed by rememberSaveable  { mutableStateOf(false) }
 
@@ -87,7 +87,7 @@ fun ReminderItem(
                     isPressed = !isPressed
                     isAnimating = !isAnimating},
                 onLongClick = {
-                    showMenu = !showMenu
+                    null
                 }
             )
             .background(Color.White)
