@@ -237,6 +237,7 @@ fun HomeScreen(
                             val categoryTasks = tasksByCategory.value[item.id] ?: emptyList()
 
                             CategoriesItem(
+                                viewModel,
                                 userId,
                                 item,
                                 categoryTasks,

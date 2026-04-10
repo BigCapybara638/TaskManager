@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,103 +42,118 @@ fun SignInScreen(
     onNavigateToSignUp: () -> Unit,
     onNavigateToHome: () -> Unit
 ) {
-    TaskManagerTheme {
+    val viewModel: AuthViewModel = koinViewModel()
+    val signInState by viewModel.signInState.collectAsState()
+    val startAuthState by viewModel.startAuthState.collectAsState()
 
-        val viewModel: AuthViewModel = koinViewModel()
-        val authState by viewModel.authState.collectAsState()
-        val startAuthState by viewModel.startAuthState.collectAsState()
+    var login by remember { mutableStateOf("") }
+    var pass by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
-        LaunchedEffect(Unit) {
-            viewModel.checkAuthState()
-        }
+    LaunchedEffect(Unit) {
+        viewModel.resetStates()
+    }
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 14.dp)
-
-        ) {
-            var login by remember { mutableStateOf("") }
-            var pass by remember { mutableStateOf("") }
-
-            Text(
-                text = "Добро пожаловать!",
-                fontSize = 22.sp
-            )
-
-            OutlinedTextField(
-                value = login,
-                onValueChange = { login = it },
-                label = { Text("Логин") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.85F)
-            )
-
-            OutlinedTextField(
-                value = pass,
-                onValueChange = { pass = it },
-                label = { Text("Пароль") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(0.85F)
-            )
-
-            when(startAuthState) {
-                is SessionStatus.RefreshFailure -> {
-                    Text(
-                        text = "Ошибка входа - $startAuthState",
-                        color = Color.Red)
-                }
-                is SessionStatus.Initializing -> {
-
-                }
-
-                is SessionStatus.Authenticated -> {
-                    Text("Успешно!")
-                }
-                is SessionStatus.NotAuthenticated -> {
-                    Text(
-                        text = "Ошибка: Неправильный логин или пароль",
-                        color = Color.Red
-                    )
-                }
+    LaunchedEffect(signInState) {
+        when (signInState) {
+            is Result.Success -> {
+                onNavigateToHome()
             }
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(0.3F)
-                    .padding(top = 10.dp),
-                onClick = {
-                    if(login.isNotBlank() && pass.isNotBlank()) {
+            is Result.Error -> {
+                errorMessage = (signInState as Result.Error).error
+            }
+
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(startAuthState) {
+        when (startAuthState) {
+            is SessionStatus.Authenticated -> {
+                onNavigateToHome()
+            }
+            is SessionStatus.RefreshFailure -> {
+                errorMessage = "Сессия истекла, войдите снова"
+            }
+            else -> {}
+        }
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 14.dp)
+    ) {
+        Text(
+            text = "Добро пожаловать!",
+            fontSize = 22.sp
+        )
+
+        OutlinedTextField(
+            value = login,
+            onValueChange = {
+                login = it
+                errorMessage = null
+            },
+            label = { Text("Email") },
+            singleLine = true,
+            isError = errorMessage != null,
+            modifier = Modifier.fillMaxWidth(0.85F)
+        )
+
+        OutlinedTextField(
+            value = pass,
+            onValueChange = {
+                pass = it
+                errorMessage = null
+            },
+            label = { Text("Пароль") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            isError = errorMessage != null,
+            modifier = Modifier.fillMaxWidth(0.85F)
+        )
+
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage ?: "",
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.3F)
+                .padding(top = 10.dp),
+            onClick = {
+                when {
+                    login.isBlank() -> errorMessage = "Введите email"
+                    pass.isBlank() -> errorMessage = "Введите пароль"
+                    else -> {
+                        errorMessage = null
                         viewModel.signIn(login, pass)
                     }
                 }
-            ) {
+            }
+        ) {
+            if (signInState is Result.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
+            } else {
                 Text("Войти")
             }
+        }
 
-            Button(
-                onClick = {
-                    onNavigateToSignUp()
-                }
-            ) {
-                Text(
-                    text = "Зарегиcтрироваться",
-                )
-            }
-
-            when (authState) {
-                is Result.Error -> {
-
-                }
-                is Result.Loading -> {
-
-                }
-                is Result.Success -> {
-                    onNavigateToHome()
-                }
-            }
+        Button(onClick = onNavigateToSignUp) {
+            Text("Зарегистрироваться")
         }
     }
 }

@@ -38,7 +38,7 @@ object SignUp
 object Home
 
 @Serializable
-object Loading  // Add Loading destination
+object Loading
 
 @Composable
 fun App(modifier: Modifier) {
@@ -47,69 +47,68 @@ fun App(modifier: Modifier) {
             modules(appModule)
         }
     ) {
-        val authViewModel: AuthViewModel = koinViewModel()
-        val navController = rememberNavController()
+        TaskManagerTheme {
+            val authViewModel: AuthViewModel = koinViewModel()
+            val navController = rememberNavController()
 
-        val sessionStatus by authViewModel.startAuthState.collectAsState()
+            val sessionStatus by authViewModel.startAuthState.collectAsState()
 
-        var isAuthCheckComplete by remember { mutableStateOf(false) }
-
-        LaunchedEffect(Unit) {
-            authViewModel.checkAuthState()
-            isAuthCheckComplete = true
-        }
-
-        val startDestination = when {
-            !isAuthCheckComplete -> Loading
-            sessionStatus is SessionStatus.Authenticated -> Home
-            else -> SignIn
-        }
-
-        NavHost(
-            navController = navController,
-            startDestination = startDestination
-        ) {
-            composable<Loading> {
-                LoadingScreen(
-                    modifier = modifier
-                )
+            LaunchedEffect(Unit) {
+                authViewModel.checkAuthState()
             }
 
-            composable<Home> {
-                HomeScreen(
-                    modifier = modifier,
-                    onNavigateToSignIn = {
-                        navController.navigate(SignIn) {
-                            popUpTo(Home) { inclusive = true }
-                        }
-                    }
-                )
+            // Просто определяем начальный пункт назначения
+            val startDestination = remember(sessionStatus) {
+                when (sessionStatus) {
+                    is SessionStatus.Authenticated -> Home
+                    else -> SignIn
+                }
             }
 
-            composable<SignIn> {
-                SignInScreen(
-                    onNavigateToSignUp = {
-                        navController.navigate(SignUp)
-                    },
-                    onNavigateToHome = {
-                        navController.navigate(Home) {
-                            popUpTo(SignIn) { inclusive = true }
+            NavHost(
+                navController = navController,
+                startDestination = startDestination
+            ) {
+                composable<Home> {
+                    HomeScreen(
+                        modifier = modifier,
+                        onNavigateToSignIn = {
+                            authViewModel.signOut()
+                            navController.navigate(SignIn) {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
                         }
-                    }
-                )
-            }
+                    )
+                }
 
-            composable<SignUp> {
-                SignUpScreen(
-                    onNavigateToHome = {
-                        navController.navigate(Home) {
-                            popUpTo(SignUp) { inclusive = true }
+                composable<SignIn> {
+                    SignInScreen(
+                        onNavigateToSignUp = {
+                            navController.navigate(SignUp)
+                        },
+                        onNavigateToHome = {
+                            navController.navigate(Home) {
+                                popUpTo(SignIn) { inclusive = true }
+                            }
                         }
-                    },
-                    onNavigateToSignIn = {
-                        navController.navigate(SignIn)
-                    }
-                )
+                    )
+                }
+
+                composable<SignUp> {
+                    SignUpScreen(
+                        onNavigateToHome = {
+                            navController.navigate(Home) {
+                                popUpTo(SignUp) { inclusive = true }
+                            }
+                        },
+                        onNavigateToSignIn = {
+                            navController.navigate(SignIn) {
+                                popUpTo(SignUp) { inclusive = true }
+                            }
+                        }
+                    )
+                }
             }
         }
     }
