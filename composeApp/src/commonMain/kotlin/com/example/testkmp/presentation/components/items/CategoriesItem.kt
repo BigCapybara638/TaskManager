@@ -37,7 +37,6 @@ import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.SecondaryTextColor
 import com.example.testkmp.domain.models.Categories
-import com.example.testkmp.domain.models.Reminder
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.dialogs.AddTaskDialog
@@ -47,13 +46,13 @@ import org.koin.compose.viewmodel.koinViewModel
 //@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesItem(
-    viewModel: HomeViewModel,
     userId: String,
     cats: Categories,
     tasksList: List<Task>,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
+    val viewModel: HomeViewModel = koinViewModel()
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
     var state by rememberSaveable { mutableStateOf(false) }
@@ -195,7 +194,7 @@ fun TasksListContent(
         if (tasks.isEmpty()) {
             EmptyTasksPlaceholder()
         } else {
-            ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""))
+            ReminderItem()
             notCompletedTasks.forEach { task ->
                 TaskItem(
                     task = task,

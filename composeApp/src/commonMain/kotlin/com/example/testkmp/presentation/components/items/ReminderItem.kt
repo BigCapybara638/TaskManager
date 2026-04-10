@@ -36,15 +36,12 @@ import androidx.compose.ui.unit.sp
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.SecondaryTextColor
-import com.example.testkmp.domain.models.Reminder
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.dialogs.UpdateTaskDialog
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ReminderItem(
-    reminder: Reminder
-) {
+fun ReminderItem() {
     val viewModel: HomeViewModel = koinViewModel()
 
     var checkedState by rememberSaveable { mutableStateOf(false) }
@@ -111,14 +108,14 @@ fun ReminderItem(
         Column(
             modifier = Modifier.fillMaxSize().padding(vertical = 2.dp)
         ) {
-            Text(text = reminder.deadline,
+            Text(text = "Сегодня в 19:00",
                 fontSize = 10.sp,
                 color = SecondaryTextColor,
                 modifier = Modifier
                     .padding(start = 12.dp)
             )
 
-            Text(text = reminder.name,
+            Text(text = "Созвон",
                 fontSize = 20.sp,
                 modifier = Modifier
                     .padding(start = 10.dp)
