@@ -46,7 +46,7 @@ import com.example.testkmp.presentation.AuthViewModel
 import com.example.testkmp.presentation.DataState
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.dialogs.AddCategoryDialog
-import com.example.testkmp.presentation.components.CategoriesItem
+import com.example.testkmp.presentation.components.items.CategoriesItem
 import com.example.testkmp.presentation.components.GigachatIsland
 import io.github.jan.supabase.auth.auth
 import org.koin.compose.viewmodel.koinViewModel
@@ -237,6 +237,7 @@ fun HomeScreen(
                             val categoryTasks = tasksByCategory.value[item.id] ?: emptyList()
 
                             CategoriesItem(
+                                viewModel,
                                 userId,
                                 item,
                                 categoryTasks,

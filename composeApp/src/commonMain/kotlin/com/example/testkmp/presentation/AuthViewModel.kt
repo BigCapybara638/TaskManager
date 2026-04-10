@@ -26,6 +26,12 @@ class AuthViewModel(
     private var _startAuthState = MutableStateFlow<SessionStatus>(SessionStatus.Initializing)
     val startAuthState: StateFlow<SessionStatus> = _startAuthState
 
+    private var _signInState = MutableStateFlow<Result<UserInfo?>?>(null)
+    val signInState: StateFlow<Result<UserInfo?>?> = _signInState
+
+    private var _signUpState = MutableStateFlow<Result<UserInfo?>?>(null)
+    val signUpState: StateFlow<Result<UserInfo?>?> = _signUpState
+
     init {
         checkAuthState()
     }
@@ -36,34 +42,51 @@ class AuthViewModel(
                 val result = checkAuthorizationState()
                 _startAuthState.value = result
             } catch (e: Exception) {
-                println(e)
+                println("Check auth error: ${e.message}")
+                _startAuthState.value = SessionStatus.NotAuthenticated()
             }
         }
     }
 
     fun signUp(email: String, pass: String, username: String? = null) {
         viewModelScope.launch {
+            _signUpState.value = Result.Loading
             val result = signUpUseCase(email, pass, username)
+            _signUpState.value = result
 
-            when(result) {
-                is Result.Success -> {println("success")}
-                is Result.Error -> {println(result.error)}
-                is Result.Loading -> {println("loading")}
+            when (result) {
+                is Result.Success -> {
+                    println("Sign up success")
+                    checkAuthState()
+                }
+                is Result.Error -> {
+                    println("Sign up error: ${result.error}")
+                }
+                is Result.Loading -> {
+                    println("Sign up loading")
+                }
             }
-            checkAuthState()
         }
     }
 
     fun signIn(email: String, pass: String) {
         viewModelScope.launch {
-            _authState.value = Result.Loading
-            try {
-                val result = signInUseCase(email, pass)
-                _authState.value = result
-            } catch (e: Exception) {
-                _authState.value = Result.Error(e.message.toString())
+            _signInState.value = Result.Loading
+            val result = signInUseCase(email, pass)
+            _signInState.value = result
+
+            when (result) {
+                is Result.Success -> {
+                    println("Sign in success")
+                    checkAuthState()
+                }
+                is Result.Error -> {
+                    println("Sign in error: ${result.error}")
+                }
+                is Result.Loading -> {
+                    println("Sign in loading")
+                }
             }
-            checkAuthState()
         }
     }
 
@@ -72,9 +95,17 @@ class AuthViewModel(
             try {
                 signOutUseCase()
                 _authState.value = Result.Loading
+                _startAuthState.value = SessionStatus.NotAuthenticated()
+                _signInState.value = null
+                _signUpState.value = null
             } catch (e: Exception) {
                 _authState.value = Result.Error(e.message.toString())
             }
         }
+    }
+
+    fun resetStates() {
+        _signInState.value = null
+        _signUpState.value = null
     }
 }

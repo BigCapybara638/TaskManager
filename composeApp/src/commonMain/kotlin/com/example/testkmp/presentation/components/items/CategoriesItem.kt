@@ -1,4 +1,4 @@
-package com.example.testkmp.presentation.components
+package com.example.testkmp.presentation.components.items
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -14,17 +14,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,13 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.SecondaryTextColor
 import com.example.testkmp.domain.models.Categories
+import com.example.testkmp.domain.models.Reminder
 import com.example.testkmp.domain.models.Task
 import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.dialogs.AddTaskDialog
@@ -51,13 +47,13 @@ import org.koin.compose.viewmodel.koinViewModel
 //@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesItem(
+    viewModel: HomeViewModel,
     userId: String,
     cats: Categories,
     tasksList: List<Task>,
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    val viewModel: HomeViewModel = koinViewModel()
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
     var state by rememberSaveable { mutableStateOf(false) }
@@ -199,6 +195,7 @@ fun TasksListContent(
         if (tasks.isEmpty()) {
             EmptyTasksPlaceholder()
         } else {
+            ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""))
             notCompletedTasks.forEach { task ->
                 TaskItem(
                     task = task,
