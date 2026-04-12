@@ -40,7 +40,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TaskItem(
     task: Task,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    onClick: () -> Unit,
 ) {
     // диалоги и меню
     var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -70,7 +71,7 @@ fun TaskItem(
             .combinedClickable(
                 onClick = {
                     isPressed = true
-                    viewModel.updateIsCompletedState(task)
+                    onClick()
                 },
                 onLongClick = { showMenu = true }
             )

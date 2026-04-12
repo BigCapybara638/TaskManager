@@ -61,6 +61,7 @@ fun App(modifier: Modifier) {
             val startDestination = remember(sessionStatus) {
                 when (sessionStatus) {
                     is SessionStatus.Authenticated -> Home
+                    is SessionStatus.Initializing -> Loading
                     else -> SignIn
                 }
             }
@@ -108,6 +109,10 @@ fun App(modifier: Modifier) {
                             }
                         }
                     )
+                }
+
+                composable<Loading> {
+                    LoadingScreen()
                 }
             }
         }

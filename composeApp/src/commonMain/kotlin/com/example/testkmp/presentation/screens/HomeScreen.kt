@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testkmp.ActionButtonColor
@@ -121,19 +122,8 @@ fun HomeScreen(
                             .padding(bottom = 14.dp)
 
                     ) {
-                        Text(
-                            text = "Категории",
-                            fontSize = 24.sp,
-                            modifier = Modifier
-                                .padding(top = 18.dp, bottom = 6.dp)
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth(0.85F)
-                                .height(2.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(PrimaryTextColor)
-                        )
+                        HeaderColumn()
+
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -156,19 +146,7 @@ fun HomeScreen(
                             .padding(bottom = 14.dp)
 
                     ) {
-                        Text(
-                            text = "Категории",
-                            fontSize = 24.sp,
-                            modifier = Modifier
-                                .padding(top = 18.dp, bottom = 6.dp)
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth(0.85F)
-                                .height(2.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(PrimaryTextColor)
-                        )
+                        HeaderColumn()
 
                         CircularProgressIndicator(
                             modifier = Modifier
@@ -204,18 +182,7 @@ fun HomeScreen(
                                     .fillMaxWidth()
                                     .padding(bottom = 8.dp)
                             ) {
-                                Text(
-                                    text = "Категории",
-                                    fontSize = 24.sp,
-                                    modifier = Modifier.padding(top = 18.dp, bottom = 6.dp)
-                                )
-                                Spacer(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.85F)
-                                        .height(2.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(PrimaryTextColor)
-                                )
+                                HeaderColumn()
 
                                 GigachatIsland()
 
@@ -237,12 +204,19 @@ fun HomeScreen(
                             val categoryTasks = tasksByCategory.value[item.id] ?: emptyList()
 
                             CategoriesItem(
-                                viewModel,
-                                userId,
-                                item,
-                                categoryTasks,
-                                Modifier.animateItem(),
-                                {}
+                                viewModel = viewModel,
+                                category = item,
+                                tasksList = categoryTasks,
+                                modifier = Modifier.animateItem(),
+                                onConfirm = { title, description ->
+                                    viewModel.addTask(
+                                    Task(
+                                        name = title,
+                                        description = description,
+                                        category_id = item.id!!,
+                                        user_id = userId
+                                    )
+                                )}
                             )
                         }
                     }
@@ -260,4 +234,20 @@ fun HomeScreen(
             )
         }
     }
+}
+
+@Composable
+fun HeaderColumn() {
+    Text(
+        text = "Категории",
+        fontSize = 24.sp,
+        modifier = Modifier.padding(top = 18.dp, bottom = 6.dp)
+    )
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth(0.85F)
+            .height(2.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(PrimaryTextColor)
+    )
 }

@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
 import com.example.testkmp.SecondaryTextColor
@@ -43,11 +44,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ReminderItem(
+    reminder: Reminder,
     viewModel: HomeViewModel,
-    reminder: Reminder
-) {
-
-    var checkedState by rememberSaveable { mutableStateOf(reminder.completed) }
+    ) {
 
     var isPressed by rememberSaveable  { mutableStateOf(false) }
 
@@ -56,21 +55,15 @@ fun ReminderItem(
 
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "scale"
+        label = "scale",
+        finishedListener = { isPressed = false }
     )
 
     var isAnimating by rememberSaveable  { mutableStateOf(false) }
 
     val alpha by animateFloatAsState(
         targetValue = if (isAnimating) 0.5f else 1f,
-        animationSpec = tween(
-            durationMillis = 250,
-            easing = FastOutSlowInEasing
-        ),
+        animationSpec = tween(250),
         label = "alpha"
     )
 
@@ -83,11 +76,10 @@ fun ReminderItem(
             .combinedClickable(
                 onClick = {
 //                    viewModel.updateIsCompletedState(task)
-                    checkedState = !checkedState
                     isPressed = !isPressed
-                    isAnimating = !isAnimating},
+                    isAnimating = !isAnimating },
                 onLongClick = {
-                    null
+                    showMenu = true
                 }
             )
             .background(Color.White)
@@ -100,12 +92,10 @@ fun ReminderItem(
     ) {
 
         Checkbox(
-            checked = checkedState,
+            checked = reminder.completed,
             modifier = Modifier
                 .size(40.dp),
-            onCheckedChange = {
-                checkedState = it
-            }
+            onCheckedChange = null
         )
 
         Column(
@@ -160,3 +150,10 @@ fun ReminderItem(
         }
     }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun ReminderItemPreview() {
+//    val viewModel: HomeViewModel = koinViewModel()
+//    ReminderItem(Reminder(name = "Яндекс", deadline = "2026-03-09", category_id = 1L, user_id = ""), viewModel)
+//}

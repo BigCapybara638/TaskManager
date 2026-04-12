@@ -43,35 +43,27 @@ import com.example.testkmp.presentation.HomeViewModel
 import com.example.testkmp.presentation.components.dialogs.AddTaskDialog
 import org.koin.compose.viewmodel.koinViewModel
 
-
-//@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoriesItem(
     viewModel: HomeViewModel,
-    userId: String,
-    cats: Categories,
+    category: Categories,
     tasksList: List<Task>,
     modifier: Modifier,
-    onClick: () -> Unit
+    onConfirm: (String, String?) -> Unit
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
 
     var state by rememberSaveable { mutableStateOf(false) }
     var showAddTaskDialog by remember { mutableStateOf(false) }
 
-
     Column (
         modifier = modifier
             .fillMaxWidth()
             .padding(2.dp)
             .clip(RoundedCornerShape(15.dp))
-//            .clickable{
-//                state = !state
-//            }
             .combinedClickable(
                 onClick = {
                     state = !state
-                    //viewModel.loadTasksData(userId)
                 },
                 onLongClick = {
                     showMenu = !showMenu
@@ -86,7 +78,7 @@ fun CategoriesItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = cats.name,
+            Text(text = category.name,
                 color = PrimaryTextColor,
                 fontSize = 24.sp,
                 modifier = Modifier
@@ -120,8 +112,7 @@ fun CategoriesItem(
             )
         ) {
             TasksListContent(
-                userId = userId,
-                categories = cats,
+                viewModel = viewModel,
                 tasks = tasksList
             )
         }
@@ -149,7 +140,7 @@ fun CategoriesItem(
                     Text("Удалить", color = Color.Red)
                 },
                 onClick = {
-                    viewModel.deleteCategory(cats)
+                    viewModel.deleteCategory(category)
                     showMenu = false
                 }
             )
@@ -158,14 +149,7 @@ fun CategoriesItem(
             AddTaskDialog(
                 onDismiss = { showAddTaskDialog = false },
                 onConfirm = { title, description ->
-                    viewModel.addTask(
-                        Task(
-                            name = title,
-                            description = description,
-                            category_id = cats.id!!,
-                            user_id = userId
-                        )
-                    )
+                    onConfirm(title, description)
                     showAddTaskDialog = false
                 }
             )
@@ -175,11 +159,9 @@ fun CategoriesItem(
 
 @Composable
 fun TasksListContent(
-    userId: String,
-    categories: Categories,
+    viewModel: HomeViewModel,
     tasks: List<Task>,
 ) {
-    val viewModel: HomeViewModel = koinViewModel()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -192,11 +174,14 @@ fun TasksListContent(
         if (tasks.isEmpty()) {
             EmptyTasksPlaceholder()
         } else {
-            ReminderItem(viewModel, Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""))
+            //ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""), viewModel)
             tasks.forEach { task ->
                 TaskItem(
                     viewModel = viewModel,
                     task = task,
+                    onClick = {
+                        viewModel.updateIsCompletedState(task)
+                    }
                 )
                 Spacer(modifier = Modifier.height(2.dp))
             }
