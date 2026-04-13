@@ -9,6 +9,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
+// реализация игнорирующая сертификат
 actual fun createHttpClientEngine(): HttpClientEngine {
     return OkHttp.create {
         config {

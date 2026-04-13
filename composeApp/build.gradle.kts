@@ -39,6 +39,7 @@ kotlin {
 
         }
         commonMain.dependencies {
+            implementation(compose.components.resources)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -126,5 +127,12 @@ compose.desktop {
                 shortcut = true
             }
         }
+    }
+}
+
+compose {
+    resources {
+        packageOfResClass = "com.exapmle.testkmp.generated.resources"
+        publicResClass = true
     }
 }
