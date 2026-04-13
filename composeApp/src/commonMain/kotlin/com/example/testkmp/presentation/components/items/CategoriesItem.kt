@@ -174,7 +174,7 @@ fun TasksListContent(
         if (tasks.isEmpty()) {
             EmptyTasksPlaceholder()
         } else {
-            //ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""), viewModel)
+            ReminderItem(Reminder(name = "Яндекс стажировка", deadline = "2026-09-02", category_id = 3L, user_id = ""), viewModel)
             tasks.forEach { task ->
                 TaskItem(
                     viewModel = viewModel,

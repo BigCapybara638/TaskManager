@@ -22,6 +22,8 @@ val Pink90 = Color(0xFF164AE8)
 //val BackgroundColor = Color(0xFFFDF6D2)
 val BackgroundColor = Color(0xFFEAF0F3)
 
+val SecondBackgroundColor = Color(0xFFDAF0FA)
+
 //val ActionButtonColor = Color(0xFFF6E06C)
 val ActionButtonColor = Color(0xFFC96E4A)
 val EnabledActionButtonColor = Color(0xFF9E9D9D)

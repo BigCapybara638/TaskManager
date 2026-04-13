@@ -19,6 +19,7 @@ import com.example.testkmp.domain.usecases.update.UpdateTaskUseCase
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -97,6 +98,8 @@ class HomeViewModel(
     fun getMessage() {
         viewModelScope.launch {
             try {
+                _gigachatState.value = Result.success("Еще загружаю...")
+                _gigachatState.value = Result.success("Это заглушка запроса в Gigachat")
                 //_gigachatState.value = getMessageFromGigachatUseCase()
 
             } catch (e: Exception) {

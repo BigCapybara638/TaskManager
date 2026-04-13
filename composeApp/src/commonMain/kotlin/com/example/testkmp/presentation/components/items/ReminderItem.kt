@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testkmp.BackgroundColor
 import com.example.testkmp.PrimaryTextColor
+import com.example.testkmp.SecondBackgroundColor
 import com.example.testkmp.SecondaryTextColor
 import com.example.testkmp.domain.models.Reminder
 import com.example.testkmp.presentation.HomeViewModel
@@ -71,19 +73,19 @@ fun ReminderItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp)
             .clip(RoundedCornerShape(15.dp))
             .combinedClickable(
                 onClick = {
 //                    viewModel.updateIsCompletedState(task)
                     isPressed = !isPressed
-                    isAnimating = !isAnimating },
+                    isAnimating = !isAnimating
+                },
                 onLongClick = {
                     showMenu = true
                 }
             )
-            .background(Color.White)
-            .padding(2.dp)
+            .border(1.dp, SecondBackgroundColor, RoundedCornerShape(15.dp))
+            .padding(start = 2.dp)
             .graphicsLayer {
                 this.alpha = alpha
                 this.scaleX = scale
@@ -99,19 +101,19 @@ fun ReminderItem(
         )
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(vertical = 2.dp)
+            modifier = Modifier.fillMaxWidth().padding(4.dp)
         ) {
             Text(text = reminder.deadline,
-                fontSize = 10.sp,
+                fontSize = 14.sp,
                 color = SecondaryTextColor,
                 modifier = Modifier
-                    .padding(start = 12.dp)
+                    .padding(start = 5.dp)
             )
 
             Text(text = reminder.name,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .padding(start = 10.dp)
+                    .padding(start = 5.dp)
             )
         }
 

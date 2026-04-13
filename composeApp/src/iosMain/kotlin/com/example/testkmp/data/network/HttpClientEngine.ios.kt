@@ -13,5 +13,9 @@ import platform.Foundation.serverTrust
 import com.exapmle.testkmp.generated.resources.Res
 
 actual fun createHttpClientEngine(): HttpClientEngine {
-    return Darwin.create()
+    return Darwin.create {
+        configureSession {
+            timeoutIntervalForRequest = 10.0
+        }
+    }
 }

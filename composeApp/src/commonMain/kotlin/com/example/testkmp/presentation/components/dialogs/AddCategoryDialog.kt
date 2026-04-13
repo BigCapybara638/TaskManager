@@ -27,7 +27,7 @@ fun AddCategoryDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Новая задача") },
+        title = { Text("Новая категория") },
         containerColor = BackgroundColor,
         text = {
             Column {
