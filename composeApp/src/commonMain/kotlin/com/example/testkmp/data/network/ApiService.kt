@@ -50,7 +50,6 @@ class ApiService(
             val url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
 
             val bearerKey = getBearerKey().getOrNull()?.access_token ?: ""
-            println("fhfh $bearerKey")
 
             val messages = mutableListOf(
                 GigaChatMessage(
@@ -73,7 +72,7 @@ class ApiService(
             )
 
             val request = GigachatApiRequest(
-                model = "GigaChat-Pro",
+                model = "GigaChat-2",
                 messages = messages
             )
 

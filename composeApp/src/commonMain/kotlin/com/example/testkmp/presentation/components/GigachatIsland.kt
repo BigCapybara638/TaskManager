@@ -1,5 +1,12 @@
 package com.example.testkmp.presentation.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,6 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +38,7 @@ fun GigachatIsland() {
 
     val viewModule: HomeViewModel = koinViewModel()
     val text = viewModule.gigachatState.collectAsState()
+    val boxVisible = remember { mutableStateOf(true) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -43,12 +53,15 @@ fun GigachatIsland() {
                 shape = RoundedCornerShape(20.dp))
 
     ) {
+        AnimatedContent(
+            targetState = text.value
+        ) {
+            Text(
+                text = text.value.getOrNull() ?: "Не удалось сгенерировать ответ",
+                color = PrimaryTextColor,
+                modifier = Modifier.padding(10.dp)
 
-        Text(
-            text = text.value.getOrNull() ?: "Не удалось сгенерировать ответ",
-            color = PrimaryTextColor,
-            modifier = Modifier.padding(10.dp)
-
-        )
+            )
+        }
     }
 }
