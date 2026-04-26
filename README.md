@@ -86,7 +86,7 @@
 
 Ссылка на проект: [https://github.com/BigCapybara638/TaskManager](https://github.com/BigCapybara638/TaskManager)
 
----
+-
 
 <div align="center">
   <sub>Сделано с ❤️ и Kotlin Multiplatform.</sub>
